@@ -1,0 +1,10 @@
+(Rotas públicas)
+Método	    URL	Body              (JSON)
+POST	/api/public/cadastro	{ "email": "teste@teste.com", "senha": "123456" }
+POST	/api/public/login	    { "email": "teste@teste.com", "senha": "123456" }
+GET	    /api/public/	          Nenhum
+
+
+Rotas privadas
+Método	URL	                    Headers
+GET	    /api/private/perfil 	Authorization: Bearer <token>

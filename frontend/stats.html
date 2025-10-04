@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LifeTrack - Estatísticas</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ---------- tabela ---------- */
+table {width:100%;border-collapse:collapse;margin-top:15px;}
+thead th {background:#f2efff;color:#5F59A0;text-align:left;padding:12px;font-weight:700}
+tbody td {padding:12px;border-top:1px solid #eee;font-size:14px}
+tbody tr:hover {background:#fbfbfd}
+.acoes a {margin-right:12px;text-decoration:none;font-weight:600;cursor:pointer}
+.editar {color:#ff6b35}
+.excluir {color:#d90429}
+.restaurar {color:#2b7a2b}
+.muted {color:#8b9096;font-size:13px}
+.strike {color:#a5a8b1;text-decoration:line-through}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);padding:20px;z-index:5000;transition:0.2s;}
+.modal.open{display:flex;}
+.modal-box{background:#fff;border-radius:12px;padding:20px;max-width:400px;width:100%;box-shadow:0 10px 25px rgba(0,0,0,0.2);transition:0.3s;}
+.modal-box h3{color:#5F59A0;margin-bottom:15px;text-align:center;font-size:18px;}
+.field{margin-top:12px;display:flex;flex-direction:column;}
+.field label{font-size:13px;color:#444;margin-bottom:6px;}
+.field input{padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;}
+.field input[readonly]{background:#f5f5f5;color:#555;cursor:not-allowed;}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+.btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:700;transition:0.2s;}
+.btn.gray{background:#f0f0f6;color:#333;}
+.btn.gray:hover{background:#e0e0e0;}
+.btn.primary{background:#5F59A0;color:#fff;}
+.btn.primary:hover{background:#4b4390;}
+
+/* responsive */
+@media(max-width:480px){
+  .modal-box{padding:15px;}
+  .modal-actions{flex-direction:column;}
+  .modal-actions .btn{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="logo">
+    <img src="assests/logo.png" alt="LifeTrack" style="height:30px;object-fit:contain">
+    LifeTrack
+  </div>
+  <div class="icons">⚙️ &nbsp; 👤</div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <button title="Home" onclick="location.href='dash.html'">🏠</button>
+  <button title="Estatísticas" onclick="location.href='stats.html'">📊</button>
+  <button title="Conquistas">🏅</button>
+</div>
+
+<!-- Main -->
+<main class="main">
+  <h2>📊 Estatísticas e Registros</h2>
+  <p class="subtitle">Gerencie suas informações: altere ou exclua registros e veja o dashboard atualizado automaticamente.</p>
+
+  <section class="card">
+    <table aria-describedby="history">
+      <thead>
+        <tr>
+          <th>Categoria</th>
+          <th>Valor</th>
+          <th style="width:200px">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </section>
+</main>
+
+<!-- Modal -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modal-box">
+    <h3>Editar registro</h3>
+    <form id="form">
+      <div class="field">
+        <label for="categoria">Categoria</label>
+        <input id="categoria" type="text" readonly>
+      </div>
+      <div class="field">
+        <label for="valor">Valor</label>
+        <input id="valor" type="text" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn gray" id="btnCancel">Cancelar</button>
+        <button type="submit" class="btn primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const KEY='lifetrack_stats_v1';
+const tbody=document.getElementById('tbody');
+const modal=document.getElementById('modal');
+const form=document.getElementById('form');
+const inpCat=document.getElementById('categoria');
+const inpVal=document.getElementById('valor');
+const btnCancel=document.getElementById('btnCancel');
+let rows=[], editingId=null;
+
+// ---------- persistência ----------
+function seedIfEmpty(){
+  if(localStorage.getItem(KEY)) return;
+  const seed=[
+    { id:'r1', categoria:'Hidratação', valor:'250', deleted:false },
+    { id:'r2', categoria:'Exercício', valor:'30', deleted:false },
+    { id:'r3', categoria:'Sono', valor:'7', deleted:false }
+  ];
+  localStorage.setItem(KEY, JSON.stringify(seed));
+}
+
+function load(){ return JSON.parse(localStorage.getItem(KEY)||'[]'); }
+function save(rows){ localStorage.setItem(KEY,JSON.stringify(rows)); updateDashboard(rows); }
+
+// ---------- render ----------
+function render(){
+  tbody.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    const tdC=document.createElement('td'); tdC.textContent=r.categoria;
+    const tdV=document.createElement('td'); tdV.textContent=r.deleted?'—':r.valor;
+    const tdA=document.createElement('td'); tdA.className='acoes';
+
+    if(r.deleted){
+      tdC.classList.add('strike'); tdV.classList.add('muted');
+      const rest=document.createElement('a'); rest.textContent='Restaurar'; rest.className='restaurar';
+      rest.addEventListener('click',()=>{ r.deleted=false; save(rows); render(); });
+      tdA.appendChild(rest);
+    } else {
+      const edit=document.createElement('a'); edit.textContent='Editar'; edit.className='editar';
+      edit.addEventListener('click',()=>openEdit(r.id));
+      const del=document.createElement('a'); del.textContent='Excluir'; del.className='excluir';
+      del.addEventListener('click',()=>{ if(confirm('Deseja realmente excluir este registro?')){ r.deleted=true; save(rows); render(); }});
+      tdA.appendChild(edit); tdA.appendChild(del);
+    }
+
+    tr.appendChild(tdC); tr.appendChild(tdV); tr.appendChild(tdA);
+    tbody.appendChild(tr);
+  });
+}
+
+// ---------- modal ----------
+function openEdit(id){
+  const r=rows.find(x=>x.id===id); if(!r) return;
+  editingId=id;
+  inpCat.value=r.categoria;
+  inpVal.value=r.valor;
+  modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+}
+function closeModal(){ editingId=null; form.reset(); modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+btnCancel.addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{ if(e.target===modal) closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  if(!editingId) return closeModal();
+  const idx = rows.findIndex(x => x.id === editingId);
+  if(idx === -1) return closeModal();
+
+  let valStr = inpVal.value.trim();
+
+  // Hidratação: converte apenas se não houver "copo"
+  if(rows[idx].categoria === 'Hidratação' && !valStr.toLowerCase().includes('copo')){
+    const num = parseInt(valStr.replace(/\D/g,''));
+    const copos = Math.round(num / 250);
+    valStr = copos + (copos === 1 ? ' copo' : ' copos');
+  }
+
+  rows[idx].valor = valStr;
+  save(rows);
+  render();
+  closeModal();
+});
+
+// ---------- Dashboard sync ----------
+function updateDashboard(rows){
+  const latest={};
+  rows.forEach(r=>{ if(!r.deleted) latest[r.categoria.toLowerCase()]=r.valor; });
+  Object.keys(latest).forEach(cat=>{ localStorage.setItem(cat,latest[cat]); });
+}
+
+// ---------- boot ----------
+seedIfEmpty();
+rows=load();
+
+// Conversão inicial ml -> copos
+rows.forEach(r=>{
+  if(r.categoria==='Hidratação' && r.valor.includes('ml')){
+    const num = parseInt(r.valor.replace(/\D/g,''));
+    const copos = Math.round(num/250);
+    r.valor = copos + (copos===1?' copo':' copos');
+  }
+});
+
+render();
+updateDashboard(rows);
+save(rows);
+</script>
+</body>
+</html>
