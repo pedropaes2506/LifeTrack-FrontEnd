@@ -1,0 +1,55 @@
+.app-header {
+    width: 100%;
+    background-color: var(--color-primary-dark);
+    color: var(--color-text-light);
+    padding: 1.5rem 4rem; 
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    justify-content: space-between; 
+    
+    height: 84px; 
+}
+
+.header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; 
+    text-decoration: none;
+    color: inherit; 
+}
+
+.header-logo-img {
+    width: 3.5rem;  
+    height: 3rem; 
+}
+
+.header-logo-text {
+    font-size: 1.875rem; 
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; 
+}
+
+.header-actions svg {
+    color: var(--color-text-light);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.header-actions svg:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+    .app-header {
+        padding: 1rem 1.5rem; 
+        height: auto; 
+    }
+}

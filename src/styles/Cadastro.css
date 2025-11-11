@@ -1,0 +1,197 @@
+.cadastro-page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--color-background-light); 
+}
+
+.cadastro-main-content {
+    display: flex;
+    flex: 1; 
+    width: 100%;
+    padding: 4rem;
+    box-sizing: border-box;
+    align-items: center; 
+    justify-content: center;
+}
+
+.cadastro-card-area {
+    flex: 1; 
+    padding-right: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cadastro-headline {
+    flex: 1; 
+    padding-left: 2rem;
+    display: flex;
+    justify-content: flex-start; 
+}
+
+.cadastro-headline h1 {
+    font-size: 2.5rem; 
+    font-weight: bold;
+    color: var(--color-text-dark); 
+    max-width: 600px;
+    line-height: 1.2;
+    text-align: center; 
+}
+
+.cadastro-card {
+    background-color: var(--color-secondary-button); 
+    padding: 3rem; 
+    border-radius: 1rem; 
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 650px; 
+}
+
+.cadastro-card form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 1.75rem 1.5rem;
+}
+
+.input-group {
+    position: relative; 
+    width: 100%;
+}
+
+.input-group.full-width {
+    grid-column: 1 / -1; 
+}
+
+.input-group label {
+    position: absolute;
+    top: 0.75rem; 
+    left: 1rem;   
+    color: var(--color-text-dark); 
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    pointer-events: none; 
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--color-text-light); 
+    color: var(--color-text-dark);
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.2s;
+    box-sizing: border-box; 
+    appearance: none; 
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    box-shadow: 0 0 0 3px var(--color-primary-dark);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    transform: translateY(-1.85rem) scale(0.9);
+    left: 0.1rem;
+    color: var(--color-text-light); 
+}
+
+.input-group select + label,
+.input-group input[type="date"] + label {
+    transform: translateY(-1.85rem) scale(0.9);
+    left: 0.1rem;
+    color: var(--color-text-light);
+}
+
+.input-group select {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem; 
+}
+
+.input-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5); 
+    cursor: pointer;
+}
+
+.input-group select option {
+    color: #333; 
+    background-color: #fff; 
+}
+
+.cadastro-button {
+    grid-column: 1 / -1; 
+    margin-top: 1rem; 
+    width: 100%; 
+    font-size: 1.1rem; 
+    padding: 0.9rem 1.5rem;
+}
+
+.links-container {
+    grid-column: 1 / -1; 
+    display: flex;
+    justify-content: center; 
+    width: 100%;
+    margin-top: 1rem; 
+}
+
+.small-link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none; 
+    color: var(--color-text-light); 
+    font-size: 0.75rem;
+    opacity: 0.8;
+    transition: opacity 0.2s, text-decoration 0.2s;
+}
+
+.small-link-button:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .cadastro-main-content {
+        flex-direction: column-reverse; 
+        padding: 2rem;
+    }
+    
+    .cadastro-headline {
+        padding-left: 0;
+        margin-bottom: 3rem; 
+        justify-content: center; 
+        width: 100%;
+        text-align: center;
+    }
+
+    .cadastro-headline h1 {
+        font-size: 2rem;
+        text-align: center; 
+        max-width: 100%;
+    }
+
+    .cadastro-card-area {
+        padding-right: 0;
+        justify-content: center; 
+        width: 100%;
+    }
+
+    .cadastro-card form {
+        grid-template-columns: 1fr;
+    }
+
+    .input-group.full-width,
+    .cadastro-button,
+    .links-container {
+        grid-column: 1;
+    }
+}
