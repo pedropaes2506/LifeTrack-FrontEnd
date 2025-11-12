@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+LifeTrack-FrontEnd 🩺
+Este repositório contém o código-fonte do "LifeTrack-FrontEnd", o frontend de um aplicativo de acompanhamento de métricas de vida e saúde.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+O projeto foi desenvolvido como parte do curso "Usabilidade, desenvolvimento web, mobile e jogos" (A3).
 
-Currently, two official plugins are available:
+🚀 Tecnologias Utilizadas
+O projeto foi construído utilizando um setup moderno de desenvolvimento web, incluindo:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Vite: Um "build tool" de frontend rápido que oferece uma experiência de desenvolvimento ágil.
 
-## React Compiler
+React: A biblioteca JavaScript para construção de interfaces de usuário.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+TypeScript: Um superconjunto de JavaScript que adiciona tipagem estática.
 
-## Expanding the ESLint configuration
+CSS: Para estilização dos componentes.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+🏁 Como Começar
+Para executar este projeto localmente, você precisará ter o Node.js e o npm (ou Yarn) instalados.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Clone o Repositório
+Bash
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+git clone https://github.com/pedropaes2506/LifeTrack-FrontEnd.git
+cd LifeTrack-FrontEnd
+2. Instale as Dependências
+Dentro do diretório do projeto, execute o comando para instalar todos os pacotes necessários:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Bash
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+npm install
+3. Execute o Servidor de Desenvolvimento
+Após a instalação, inicie o servidor de desenvolvimento local do Vite:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Bash
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+npm run dev
+O aplicativo estará disponível em http://localhost:5173 (ou em outra porta indicada pelo Vite).
+
+4. Build de Produção
+Para criar uma versão otimizada do projeto para produção, execute:
+
+Bash
+
+npm run build
+Isso gerará os arquivos estáticos no diretório dist/.
