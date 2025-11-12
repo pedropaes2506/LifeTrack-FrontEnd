@@ -6,18 +6,12 @@ import HabitCard from './HabitCard';
 import '../styles/App.css';
 import '../styles/Dashboard.css'; 
 
-import { Settings, Bell, User } from 'lucide-react';
-
 import { Droplet, Dumbbell, Bed, Brain, Utensils, BookOpen } from 'lucide-react';
 
 const DashboardPage: React.FC = () => {
     return (
         <div className="dashboard-layout">
-            <Header>
-                <Settings size={24} />
-                <Bell size={24} />
-                <User size={24} />
-            </Header>
+            <Header />
             
             <Sidebar />
             

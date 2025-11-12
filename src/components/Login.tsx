@@ -21,7 +21,7 @@ const LoginPage = () => {
 
     return (
         <div className="login-page-container">
-            <Header /> 
+            <Header showActions={false} /> 
             
             <main className="login-main-content">
                 

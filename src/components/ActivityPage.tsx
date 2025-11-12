@@ -5,7 +5,6 @@ import '../styles/App.css';
 import '../styles/ActivityPage.css'; 
 
 import { 
-    Settings, Bell, User, 
     CalendarDays, Clock, Plus, 
     type LucideIcon, 
     CalendarCheck, 
@@ -40,11 +39,7 @@ const ActivityPage: React.FC<ActivityPageProps> = ({
 
     return (
         <div className="dashboard-layout">
-            <Header>
-                <Settings size={24} />
-                <Bell size={24} />
-                <User size={24} />
-            </Header>
+            <Header />
             
             <Sidebar />
             

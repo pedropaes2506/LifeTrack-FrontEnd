@@ -17,7 +17,7 @@ const CadastroPage = () => {
 
     return (
         <div className="cadastro-page-container">
-            <Header /> 
+            <Header showActions={false} /> 
             
             <main className="cadastro-main-content">
                 

@@ -3,8 +3,6 @@ import LandingPage from './components/LandingPage';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Cadastro from './components/Cadastro';
-import HydrationPage from './components/HydrationPage'; 
-import ExercisePage from './components/ExercisePage'; 
 
 function App() {
   return (
@@ -12,10 +10,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/hidratacao" element={<HydrationPage />} />
-        <Route path="/exercicio" element={<ExercisePage />} /> 
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
