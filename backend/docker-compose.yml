@@ -19,9 +19,9 @@ services:
       # String de conexão completa exigida pelo Prisma
       DATABASE_URL: "mysql://root:root@db:3306/lifetrack"
 
-    # Comando atualizado: instala dependências e mantém o container vivo
-    # para permitir o 'docker-compose exec' para as migrações.
-    command: sh -c "npm install && tail -f /dev/null"
+    # Comando atualizado: instala dependências e INICIA O SERVIDOR COM HOT-RELOAD
+    # ⬅️ CORREÇÃO DE DX: Usa tsx watch para recarregar automaticamente.
+    command: sh -c "npm install && npx tsx watch server.js" 
 
   db:
     image: mysql:8.0

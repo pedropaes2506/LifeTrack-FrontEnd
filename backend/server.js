@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import privateRoutes from './routes/private.js';
 import publicRoutes from './routes/public.js';
 import esqueciSenhaRoute from './routes/senha.js';
+import { autenticarToken } from './middleware.js'; // ⬅️ CORREÇÃO: Importar middleware de autenticação
 
 dotenv.config();
 
@@ -33,11 +34,11 @@ app.use('/api/public', publicRoutes);
 app.use('/api/public', esqueciSenhaRoute);
 
 // Rotas privadas
-app.use('/api/private', privateRoutes);
+app.use('/api/private', autenticarToken, privateRoutes); // ⬅️ CORREÇÃO: Aplicar middleware de autenticação
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
   // console.log('📂 Acesse http://localhost:3000/html.html'); // Comentado por causa do React
-  });
+});
