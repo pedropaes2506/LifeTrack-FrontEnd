@@ -12,7 +12,7 @@ export async function enviarEmail(destinatario, assunto, texto) {
   });
 
   const info = await transporter.sendMail({
-    from: `"Meu App" <${process.env.SMTP_USER}>`,
+    from: `"LifeTrack" <${process.env.SMTP_USER}>`,
     to: destinatario,
     subject: assunto,
     text: texto

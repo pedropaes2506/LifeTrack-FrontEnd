@@ -1,0 +1,35 @@
+.habit-card {
+    background-color: var(--color-highlight-bg); 
+    border-radius: 1rem; 
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 300px; 
+    box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+}
+
+.habit-icon {
+    color: var(--color-primary-dark);
+}
+
+.habit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.habit-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+.habit-progress {
+    font-size: 1rem;
+    color: var(--color-text-dark);
+}
+
+.habit-progress strong {
+    font-weight: 700;
+}
