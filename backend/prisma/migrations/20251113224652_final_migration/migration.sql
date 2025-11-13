@@ -1,12 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE `User`;
-
 -- CreateTable
 CREATE TABLE `tb_usuario` (
     `id_usuario` INTEGER NOT NULL AUTO_INCREMENT,
@@ -15,6 +6,7 @@ CREATE TABLE `tb_usuario` (
     `senha_usuario` VARCHAR(255) NOT NULL,
     `cpf_usuario` CHAR(11) NOT NULL,
     `sexo_usuario` ENUM('M', 'F', 'O') NULL,
+    `nivel_acesso` ENUM('USER', 'ADMIN', 'MODERATOR') NOT NULL DEFAULT 'USER',
     `data_nasc_usuario` DATE NOT NULL,
     `data_criacao` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
 
