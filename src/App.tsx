@@ -3,6 +3,7 @@ import LandingPage from './components/LandingPage';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Cadastro from './components/Cadastro';
+import CalendarPage from './components/CalendarPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/calendario" element={<CalendarPage />} />
       </Routes>
     </Router>
   );

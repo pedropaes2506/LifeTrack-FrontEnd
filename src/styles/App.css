@@ -50,3 +50,9 @@
     opacity: 1;
     text-decoration: underline;
 }
+.app-content-area {
+    flex: 1; 
+    padding: 1.5rem 2rem; 
+    overflow-y: auto;
+    margin-left: 100px; 
+}
