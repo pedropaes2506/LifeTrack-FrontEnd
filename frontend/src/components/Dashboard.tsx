@@ -5,7 +5,7 @@ import Sidebar from './Sidebar';
 import HabitCard from './HabitCard';
 import AddHabitModal from './AddHabitModal'; // Importa o modal de adição
 import { useAuth, API_BASE_URL } from '../context/AuthContext'; // ⬅️ CORREÇÃO: Importar API_BASE_URL
-import { getIcon } from '../utils/Icons'; // Importa a função de mapeamento de ícones
+import { getIcon } from '../utils/icons'; // Importa a função de mapeamento de ícones
 import '../styles/App.css';
 import '../styles/Dashboard.css'; 
 import { Plus, LogOut } from 'lucide-react'; 

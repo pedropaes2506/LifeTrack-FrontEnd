@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; // ⬅️ CORREÇÃO: Importar API_BASE_URL
-import '../styles/App.css'; // Importa estilos base para botões e cores
+import { useAuth, API_BASE_URL } from '../context/AuthContext'; 
+import '../styles/App.css'; 
+// ⬅️ Importa o novo CSS
+import '../styles/AddHabitModal.css'; 
 
 interface RotinaDisponivel {
     id: number;
@@ -15,7 +17,7 @@ interface AddHabitModalProps {
     onHabitAdded: () => void; // Para forçar o recarregamento do dashboard
 }
 
-// ⬅️ CORREÇÃO: Derivar URL privada da base URL
+// Derivar URL privada da base URL
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private'); 
 
 const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitAdded }) => {
@@ -28,8 +30,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    // Mapeamento de nomes de rotina para suas metas padrão.
-    // Usaremos a meta padrão do DB no envio para simplificar a UI.
+    // Mapeamento de rotinas.
     const rotinaMap = availableRotinas.reduce((acc, rotina) => {
         acc[rotina.id] = rotina;
         return acc;
@@ -48,7 +49,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
             setLoading(true);
             try {
                 // Rota para buscar rotinas disponíveis
-                // ⬅️ CORREÇÃO: Usar a URL privada construída
                 const response = await fetch(`${API_PRIVATE_URL}/rotinas/disponiveis`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -100,7 +100,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
             const meta = rotina.metaValorPadrao || 1; // Usa a meta padrão ou 1 se for nula
 
             try {
-                // ⬅️ CORREÇÃO: Usar a URL privada construída
                 const response = await fetch(`${API_PRIVATE_URL}/rotinas/aderir`, {
                     method: 'POST',
                     headers: {
@@ -139,11 +138,9 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     const renderCheckbox = (rotinaId: number) => {
         const isSelected = selectedRotinas.includes(rotinaId);
         return (
-            <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
-                isSelected ? 'bg-white border-white' : 'border-gray-400'
-            }`}>
+            <div className={`custom-checkbox ${isSelected ? 'selected' : ''}`}>
                 {isSelected && (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="#5d57a6" className="w-5 h-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                 )}
@@ -151,72 +148,53 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
         );
     };
 
-
-    // Estilos internos adaptados para o seu tema roxo
-    const modalStyle = {
-        backgroundColor: 'var(--color-primary-dark)', // Roxo escuro
-        color: 'var(--color-text-light)', // Texto claro
-        borderRadius: '1rem',
-        padding: '2rem',
-        width: '100%',
-        maxWidth: '450px',
-        boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-    };
-    const buttonCancelStyle = {
-        backgroundColor: 'var(--color-secondary-button)', // Roxo mais claro para Cancelar
-        color: 'var(--color-text-light)',
-    };
-    const buttonSaveStyle = {
-        backgroundColor: 'var(--color-secondary-button)', // Roxo mais claro para Salvar
-        color: 'var(--color-text-light)',
-    };
-
-
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
-            <div style={modalStyle}>
-                <h3 className="text-2xl font-bold mb-6 text-center">Adicionar Hábito(s):</h3>
+        // ⬅️ Utiliza a classe do backdrop do novo CSS e a função de fechar
+        <div className="add-modal-backdrop" onClick={onClose}>
+            {/* ⬅️ Utiliza a classe do conteúdo e impede a propagação do clique */}
+            <div className="add-modal-content" onClick={(e) => e.stopPropagation()}>
+                <h3 className="mb-6 text-center">Adicionar Hábito(s):</h3>
 
-                {loading && <p className="text-center text-gray-300">Carregando rotinas disponíveis...</p>}
+                {loading && <p className="text-center">Carregando rotinas disponíveis...</p>}
                 
-                {error && <p className="text-center text-red-300 mb-4">{error}</p>}
-                {successMessage && <p className="text-center text-green-300 font-medium mb-4">{successMessage}</p>}
+                {error && <p className="text-center text-error mb-4 whitespace-pre-line">{error}</p>}
+                {successMessage && <p className="text-center text-success font-medium mb-4">{successMessage}</p>}
                 
                 {!loading && availableRotinas.length === 0 && !error && (
-                    <p className="text-center text-gray-300">Todas as rotinas disponíveis já foram adicionadas!</p>
+                    <p className="text-center opacity-70">Todas as rotinas disponíveis já foram adicionadas!</p>
                 )}
 
-                <div className="space-y-4 max-h-72 overflow-y-auto pr-4">
+                <div className="available-rotinas-list">
                     {availableRotinas.map((rotina) => (
                         <div 
                             key={rotina.id} 
-                            className="flex items-center justify-between cursor-pointer py-1"
+                            className="rotina-item"
                             onClick={() => handleToggleSelect(rotina.id)}
                         >
-                            <div className="flex items-center gap-4">
+                            <div className="rotina-info">
                                 {renderCheckbox(rotina.id)}
                                 <p className="text-lg">{rotina.nome}</p>
                             </div>
-                            <span className="text-sm opacity-70">
+                            <span className="rotina-meta-padrao">
                                 Meta Padrão: {rotina.metaValorPadrao} {rotina.tipoUnidade.toLowerCase()}
                             </span>
                         </div>
                     ))}
                 </div>
 
-                <div className="flex justify-between gap-4 mt-6">
+                <div className="add-modal-actions">
                     <button 
                         onClick={onClose} 
-                        style={buttonCancelStyle}
-                        className="button-base w-full py-3"
+                        // Usa a classe do App.css
+                        className="button-base button-secondary-bg"
                         disabled={loading}
                     >
                         Cancelar
                     </button>
                     <button 
                         onClick={handleSalvar}
-                        style={buttonSaveStyle}
-                        className="button-base w-full py-3"
+                        // Usa a classe do App.css
+                        className="button-base button-secondary-bg"
                         disabled={loading || selectedRotinas.length === 0}
                     >
                         {loading ? 'Salvando...' : 'Salvar'}

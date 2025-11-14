@@ -1,0 +1,107 @@
+.add-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Fundo semi-transparente e efeito blur */
+    background-color: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.add-modal-content {
+    background-color: var(--color-primary-dark); /* Roxo escuro do tema */
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
+    color: var(--color-text-light); /* Texto claro */
+    display: flex;
+    flex-direction: column;
+}
+
+.add-modal-content h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+/* Estilo para a lista de rotinas */
+.available-rotinas-list {
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 0.5rem; /* Espaço para a barra de rolagem */
+    margin-bottom: 1.5rem;
+}
+
+/* Estilo de cada item da rotina */
+.rotina-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 0.75rem 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.rotina-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.rotina-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Checkbox customizado */
+.custom-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-text-light);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.custom-checkbox.selected {
+    background-color: var(--color-text-light);
+    border-color: var(--color-text-light);
+}
+
+.custom-checkbox.selected svg {
+    color: var(--color-primary-dark); /* Cor do checkmark */
+}
+
+.rotina-meta-padrao {
+    font-size: 0.875rem;
+    opacity: 0.7;
+}
+
+.add-modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.add-modal-actions .button-base {
+    width: 100%;
+}
+
+.text-error {
+    color: #ffcccc; /* Vermelho claro */
+}
+
+.text-success {
+    color: #ccffcc; /* Verde claro */
+}
