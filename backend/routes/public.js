@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
 
         const user = await prisma.user.findUnique({ 
             where: { email },
-            select: { id: true, email: true, nome: true, senha: true } 
+            select: { id: true, email: true, nome: true, senha: true, nivelAcesso: true } 
         });
         if (!user) {
             return res.status(401).json({ message: "Email inválido." });
@@ -94,12 +94,20 @@ router.post('/login', async (req, res) => {
         }
 
         // Retorna o token para o frontend
-        const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign(
+          { 
+            email: user.email, 
+            nivelAcesso: user.nivelAcesso // <-- Isso precisa estar no token
+          }, 
+          JWT_SECRET, 
+          { expiresIn: "1h" }
+        );
 
         res.json({
             id: user.id,
             email: user.email,
             nome: user.nome,
+            nivelAcesso: user.nivelAcesso,
             token
         });
 

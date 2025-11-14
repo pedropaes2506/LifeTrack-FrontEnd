@@ -6,8 +6,9 @@ import { fileURLToPath } from 'url';
 
 import privateRoutes from './routes/private.js';
 import publicRoutes from './routes/public.js';
+import adminRoutes from './routes/admin.js'; // ⬅️ NOVO: Rotas de Admin
 import esqueciSenhaRoute from './routes/senha.js';
-import { autenticarToken } from './middleware.js'; // ⬅️ CORREÇÃO: Importar middleware de autenticação
+import { autenticarToken, autorizarNivelAcesso } from './middleware.js'; // ⬅️ ATUALIZADO: Importar autorização
 
 dotenv.config();
 
@@ -15,9 +16,8 @@ const app = express();
 app.use(express.json());
 
 // 🔓 HABILITAR CORS para permitir que o frontend React acesse esta API
-// Em produção, você deve restringir isso ao domínio do seu frontend.
 app.use(cors({
-    origin: '*', // Permite qualquer origem durante o desenvolvimento
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -26,19 +26,18 @@ app.use(cors({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 📂 SERVIDOR DE ARQUIVOS ESTÁTICOS (Comentado: O frontend React fará isso)
-// app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Rotas públicas
+// Rotas públicas (Cadastro, Login, etc.)
 app.use('/api/public', publicRoutes);
 app.use('/api/public', esqueciSenhaRoute);
 
-// Rotas privadas
-app.use('/api/private', autenticarToken, privateRoutes); // ⬅️ CORREÇÃO: Aplicar middleware de autenticação
+// Rotas privadas (Requer apenas estar logado)
+app.use('/api/private', autenticarToken, privateRoutes); 
+
+// Rotas administrativas (Requer autenticação e nível de acesso checado dentro de admin.js)
+app.use('/api/admin', adminRoutes); // ⬅️ NOVO ENDPOINT DE ADMIN
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-  // console.log('📂 Acesse http://localhost:3000/html.html'); // Comentado por causa do React
+    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
