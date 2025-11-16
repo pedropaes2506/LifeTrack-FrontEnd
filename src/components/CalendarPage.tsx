@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-// Estilos de layout e específicos
+
 import '../styles/App.css';
 import '../styles/CalendarPage.css'; 
 
-// --- 1. CONFIGURAÇÃO DE DADOS ---
 
-// Estrutura de tipos para garantir a segurança do TypeScript
+
+
 type DailyProgressItem = { name: string; progress: number; };
 
 // Dados Mapeados por Dia (Simulação de API)

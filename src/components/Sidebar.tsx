@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
                 </li>
                 <li>
                     <NavLink 
-                        to="/metas" 
+                        to="/ofensiva" 
                         className={({ isActive }) => isActive ? "sidebar-item active" : "sidebar-item"}
                     >
                         <Flame size={28} />
