@@ -6,6 +6,7 @@ import Cadastro from './components/Cadastro';
 import CalendarPage from './components/CalendarPage';
 import OfensivaPage from './components/OfensivaPage';
 import HabitsManageAdmin from './components/HabitsManageAdmin';
+import AboutPage from './components/AboutPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/calendario" element={<CalendarPage />} />
         <Route path="/ofensiva" element={<OfensivaPage />} /> 
         <Route path="/gerenciar-habitos" element={<HabitsManageAdmin />} />
+        <Route path="/sobre" element={<AboutPage />} />
       </Routes>
     </Router>
   );
