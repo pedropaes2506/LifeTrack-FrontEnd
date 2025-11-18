@@ -9,6 +9,9 @@ import EmailSentPage from './components/EmailSentPage';
 import CalendarPage from './components/CalendarPage';
 import OfensivaPage from './components/OfensivaPage';
 import HabitsManageAdmin from './components/HabitsManageAdmin';
+import AlterarSenha from './components/AlterarSenha';
+import MeuPerfil from './components/MeuPerfil';
+import Calculadora from './components/Calculadora';
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
         <Route path="/calendario" element={<CalendarPage />} />
         <Route path="/ofensiva" element={<OfensivaPage />} /> 
         <Route path="/gerenciar-habitos" element={<HabitsManageAdmin />} />
+        <Route path="/alterar-senha" element={<AlterarSenha />} />
+        <Route path="/meu-perfil" element={<MeuPerfil />} />
+        <Route path="/calculadora" element={<Calculadora />} />
       </Routes>
     </Router>
   );

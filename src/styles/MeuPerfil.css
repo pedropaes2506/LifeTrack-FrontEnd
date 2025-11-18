@@ -1,0 +1,126 @@
+.perfil-container {
+    padding: 2rem;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh;
+    justify-content: flex-start;
+}
+
+.titulo-principal {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3a336f;
+    margin-bottom: 2rem;
+    margin-left: 30px;
+}
+
+.perfil-header {
+    margin-bottom: 2rem;
+}
+
+.perfil-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    margin-left: 30px;
+}
+
+.perfil-header p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.perfil-card {
+    width: 100%;
+    max-width: 520px;
+    background: #5d57a6;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.campo-perfil {
+    
+    margin-bottom: 1.5rem;
+}
+
+.campo-perfil label {
+    
+    display: block;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.campo-perfil input,
+.campo-perfil select {
+    
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: white;
+}
+
+.acoes-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.botao-salvar {
+    padding: 0.75rem;
+    background: #3a336f;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao-secundario {
+    padding: 0.75rem;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.botao-logout {
+    padding: 0.75rem;
+    background: transparent;
+    color: #ff6b6b;
+    border: 2px solid #ff6b6b;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.botao-salvar:hover {
+    background: #2a2554;
+}
+
+.botao-secundario:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.botao-logout:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+@media (max-width: 900px) {
+    .perfil-container {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}

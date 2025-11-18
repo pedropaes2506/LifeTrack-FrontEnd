@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ showActions = true }) => {
                         <Settings size={24} />
                     </NavLink>
                     <NavLink 
-                        to="/perfil" 
+                        to="/meu-perfil" 
                         className={({ isActive }) => isActive ? "header-action-item active" : "header-action-item"}
                     >
                         <User size={24} />
