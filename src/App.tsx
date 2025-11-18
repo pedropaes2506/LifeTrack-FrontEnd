@@ -6,6 +6,9 @@ import Cadastro from './components/Cadastro';
 import ActivityPage from './components/ActivityPage';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
 import EmailSentPage from './components/EmailSentPage';
+import CalendarPage from './components/CalendarPage';
+import OfensivaPage from './components/OfensivaPage';
+import HabitsManageAdmin from './components/HabitsManageAdmin';
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
         {/* Rotas antigas removidas (HydrationPage, ExercisePage) */}
         <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
         <Route path="/email-enviado" element={<EmailSentPage />} />
+        <Route path="/calendario" element={<CalendarPage />} />
+        <Route path="/ofensiva" element={<OfensivaPage />} /> 
+        <Route path="/gerenciar-habitos" element={<HabitsManageAdmin />} />
       </Routes>
     </Router>
   );

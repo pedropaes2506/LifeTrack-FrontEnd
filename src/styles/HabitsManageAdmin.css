@@ -1,0 +1,331 @@
+/* Estilos para: src/styles/ManageHabitsPage.css */
+
+.manage-habits-container {
+  width: 100%;
+}
+
+.manage-habits-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Container da Tabela */
+.habits-list-container {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Para os cantos arredondados */
+}
+
+/* Estrutura de Grid para a tabela */
+.habits-list-header,
+.habit-row {
+  display: grid;
+  /* Colunas: Nome(3fr) | Medida(1.5fr) | Meta(1.5fr) | Ativo(0.5fr) | Ações(1fr) */
+  grid-template-columns: 3fr 1.5fr 1.5fr 0.5fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  align-items: center;
+}
+
+/* Cabeçalho da Tabela (cinza) */
+.habits-list-header {
+  background-color: var(--color-highlight-bg, #f5f5f5); /* Usa a variável global */
+  font-weight: 600;
+  color: #555;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Linhas da Tabela */
+.habit-row {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.habit-row:last-child {
+  border-bottom: none;
+}
+
+.habit-row span {
+  color: var(--color-text-dark, #333);
+}
+
+/* Centraliza o "✓" */
+.habit-active-check {
+  text-align: center;
+  font-weight: bold;
+  color: #2e7d32; /* Verde */
+}
+
+/* Botões de Ação (Editar/Deletar) */
+.habit-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.icon-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Rodapé com botões de Salvar/Novo */
+.habits-actions-footer {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+/* Botão Salvar (Roxo) */
+.btn-habits-save {
+  background-color: var(--color-primary-dark, #3a336f);
+  color: var(--color-text-light, #fff);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-habits-save:hover {
+  background-color: #2b2554;
+}
+
+/* Botão Novo Hábito (Cinza Escuro) */
+.btn-habits-new {
+  background-color: #4A4A4A; /* Cinza escuro */
+  color: var(--color-text-light, #fff);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-habits-new:hover {
+  background-color: #333;
+}
+
+/* --- ESTILOS DOS MODAIS (COMEÇA AQUI) --- */
+
+/* Animação de Fade-in para o fundo */
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Animação de Scale-up para o modal */
+@keyframes scaleUpModal {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Overlay (fundo escuro) */
+.modal-overlay-admin {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInOverlay 0.2s ease-out; /* Animação de entrada */
+}
+
+/* Conteúdo do Modal (roxo) */
+.modal-content-admin {
+  background-color: var(--color-primary-dark, #3a336f);
+  color: var(--color-text-light, #fff);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  animation: scaleUpModal 0.2s ease-out; /* Animação de entrada */
+  transform-origin: center;
+}
+
+.modal-header-admin {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Corpo do Modal (Formulário ou Texto) */
+.modal-body-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Estilos do Formulário */
+.form-group-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.form-group-admin label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.form-group-admin input {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--color-text-light, #fff);
+  font-size: 1rem;
+}
+.form-group-admin input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Rodapé do Modal (Botões) */
+.modal-footer-admin {
+  display: flex;
+  justify-content: flex-end; 
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Botão Cancelar (Cinza) */
+.btn-modal-cancel {
+  background-color: #6c757d;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-modal-cancel:hover {
+  background-color: #5a6268;
+}
+
+/* Botão Salvar (Roxo mais claro) */
+.btn-modal-save {
+  background-color: var(--color-secondary-button, #5d57a6);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-modal-save:hover {
+  background-color: #4a458b;
+}
+
+/* Estilos do Modal de Exclusão */
+.delete-modal {
+  text-align: center;
+}
+.delete-modal p {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+.delete-modal p strong {
+  color: #fff;
+}
+
+/* Botão Excluir (Vermelho) */
+.btn-modal-delete {
+  background-color: #d9534f;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-modal-delete:hover {
+  background-color: #c9302c;
+}
+
+/* --- ESTILOS DO CHECKBOX (MAIOR) --- */
+
+/* Estilo para o grupo do Checkbox */
+.checkbox-group-admin {
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem; 
+  user-select: none; 
+}
+
+/* Label (Texto "Hábito Ativo") */
+.checkbox-group-admin label {
+  font-size: 1.1rem; 
+  font-weight: 500;
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* Caixa do Checkbox */
+.checkbox-group-admin input[type="checkbox"] {
+  width: 1.5em;  
+  height: 1.5em; 
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  
+  -webkit-appearance: none;
+  appearance: none;
+  
+  display: grid;
+  place-content: center;
+  
+  transition: background-color 0.1s;
+}
+
+/* --- MUDANÇA AQUI --- */
+/* "Check" (quando marcado) */
+.checkbox-group-admin input[type="checkbox"]::before {
+  content: "";
+  
+  /* 1. Define o tamanho da forma de "L" */
+  width: 0.65em; 
+  height: 1.15em;
+
+  /* 2. Remove o box-shadow e cria a forma de "L" com bordas */
+  /* box-shadow: inset 1em 1em var(--color-secondary-button, #5d57a6); */
+  border: solid #2e7d32; /* <-- O "check" verde */
+  border-width: 0 0.2em 0.2em 0; /* Borda da direita e de baixo */
+
+  /* 3. Esconde e rotaciona por padrão */
+  transform: scale(0) rotate(45deg);
+  opacity: 0;
+  transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+}
+
+.checkbox-group-admin input[type="checkbox"]:checked {
+  background-color: #fff; /* Fundo branco quando checado */
+}
+
+/* 4. Mostra o "check" quando o input estiver :checked */
+.checkbox-group-admin input[type="checkbox"]:checked::before {
+  transform: scale(1) rotate(45deg);
+  opacity: 1;
+}
