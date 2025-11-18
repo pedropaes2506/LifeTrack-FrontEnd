@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------
+// --- Enums
+// -------------------------------------------------
+
+enum SexoUsuario {
+  M
+  F
+  O
+}
+
+// NOVO ENUM para a coluna nivel_acesso
+enum NivelAcesso {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum TipoUnidade {
+  ML
+  HORAS
+  MINUTOS
+  UNIDADE
+  PASSOS
+}
+
+// -------------------------------------------------
+// --- Modelos Atualizados
+// -------------------------------------------------
+
+// 1. Tabela de Usuários (tb_usuario)
+model User {
+  id             Int           @id @default(autoincrement()) @map("id_usuario")
+  nome           String        @map("nome_usuario") @db.VarChar(150)
+  email          String        @unique @map("email_usuario") @db.VarChar(255)
+  senha          String        @map("senha_usuario") @db.VarChar(255)
+  cpf            String        @unique @map("cpf_usuario") @db.Char(11)
+  sexo           SexoUsuario?  @map("sexo_usuario")
+  nivelAcesso    NivelAcesso   @default(USER) @map("nivel_acesso")
+  dataNascimento DateTime      @map("data_nasc_usuario") @db.Date
+  dataCriacao    DateTime      @default(now()) @map("data_criacao") @db.DateTime(0)
+
+  adesoes Adesao[]
+
+  @@map("tb_usuario")
+}
+
+// 2. Tabela de Rotinas (tb_rotina)
+model Rotina {
+  id              Int         @id @default(autoincrement()) @map("id_rotina")
+  nome            String      @unique @map("nome_rotina") @db.VarChar(100)
+  metaValorPadrao Int?        @map("meta_valor_padrao")
+  ativa           Boolean     @default(true)
+  dataCriacao     DateTime    @default(now()) @map("data_criacao") @db.DateTime(0)
+  dataModificacao DateTime    @default(now()) @updatedAt @map("data_modificacao") @db.DateTime(0)
+  tipoUnidade     TipoUnidade @map("tipo_unidade")
+
+  adesoes Adesao[]
+
+  @@map("tb_rotina")
+}
+
+// 3. Tabela de Adesão (tb_adesao)
+model Adesao {
+  id               Int      @id @default(autoincrement()) @map("id_adesao")
+  usuarioId        Int      @map("usuario_id")
+  rotinaId         Int      @map("rotina_id")
+  metaPessoalValor Float    @map("meta_pessoal_valor")
+  dataAdesao       DateTime @default(now()) @map("data_adesao") @db.DateTime(0)
+  statusAdesao     Boolean  @default(true) @map("status_adesao")
+
+  usuario User @relation(fields: [usuarioId], references: [id])
+  rotina  Rotina @relation(fields: [rotinaId], references: [id])
+
+  registros RegistroRotina[]
+  streak    Streak?
+
+  @@unique([usuarioId, rotinaId])
+  @@map("tb_adesao")
+}
+
+// 4. Tabela de Registros (tb_registro_rotina)
+model RegistroRotina {
+  id            Int      @id @default(autoincrement()) @map("id_registro")
+  adesaoId      Int      @map("adesao_id")
+  valorRegistro Float    @map("valor_registro")
+  dataRegistro  DateTime @default(now()) @map("data_registro") @db.DateTime(0)
+  metaCumprida  Boolean? @map("meta_cumprida")
+
+  adesao Adesao @relation(fields: [adesaoId], references: [id])
+
+  @@map("tb_registro_rotina")
+}
+
+// 5. Tabela de Streaks (tb_streak)
+model Streak {
+  id                    Int      @id @default(autoincrement()) @map("id_streak")
+  adesaoId              Int      @unique @map("adesao_id")
+  contagemAtual         Int      @default(0) @map("contagem_atual")
+  dataInicioStreak      DateTime @map("data_inicio_streak") @db.Date
+  dataUltimoCumprimento DateTime @map("data_ultimo_cumprimento") @db.Date
+  dataModificacao       DateTime @default(now()) @updatedAt @map("data_modificacao") @db.DateTime(0)
+
+  adesao Adesao @relation(fields: [adesaoId], references: [id])
+
+  @@map("tb_streak")
+}
