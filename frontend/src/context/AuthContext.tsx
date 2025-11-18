@@ -8,6 +8,7 @@ interface User {
   id: number;
   email: string;
   nome: string; 
+  nivelAcesso: 'USER' | 'ADMIN' | 'MODERATOR';
 }
 
 // 🚀 ALTERAÇÃO 1: Adicionar a função updateUserName à interface
@@ -41,12 +42,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     if (storedToken && storedUser) {
       try {
+        const parsedUser: User = JSON.parse(storedUser);
+        
+        // 🚀 VERIFICAÇÃO ADICIONADA AQUI
+        // Verifica se o campo nivelAcesso existe e se é um valor esperado
+        const validNiveis = ['USER', 'ADMIN', 'MODERATOR'];
+        if (!parsedUser.nivelAcesso || !validNiveis.includes(parsedUser.nivelAcesso)) {
+            // Se o objeto for inválido (antigo ou incompleto), lança um erro.
+            throw new Error("Dados de usuário armazenados incompletos.");
+        }
+
         setToken(storedToken);
-        setUser(JSON.parse(storedUser)); 
-      } catch (e) {
-        console.error("Erro ao parsear dados de usuário do localStorage", e);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Erro ao restaurar sessão ou dados inválidos:", error);
+        
+        // ⚠️ Limpa o localStorage para forçar um novo login.
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        
+        // Opcional: Redireciona para o login para uma experiência mais limpa.
+        // navigate('/login'); 
       }
     }
   }, []);

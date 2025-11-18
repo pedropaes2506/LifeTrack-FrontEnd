@@ -7,7 +7,8 @@ import '../styles/Login.css';
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { login } = useAuth(); // Usando a função login do contexto
+    // Use 'login' aqui
+    const { login } = useAuth(); 
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -25,24 +26,26 @@ const LoginPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, senha: password }), // O backend espera "senha"
+                body: JSON.stringify({ email, senha: password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                // Se o login for bem-sucedido, armazena o token e os dados do usuário
-                // CORRIGIDO: Agora inclui o campo 'nome'
+                // 🔑 CORREÇÃO CRÍTICA: Capturar nivelAcesso e incluí-lo no objeto de usuário
                 const user = { 
                     id: data.id, 
                     email: data.email, 
-                    nome: data.nome // Captura o nome
+                    nome: data.nome,
+                    nivelAcesso: data.nivelAcesso // ⬅️ CAMPO ADICIONADO AQUI
                 }; 
-                login(data.token, user as any); // O 'as any' é temporário, resolvido pela atualização do AuthContext
+                
+                // O 'as any' é necessário porque o tipo 'User' no contexto foi atualizado
+                login(data.token, user as any); 
                 setMessage('Login realizado com sucesso! Redirecionando...');
                 
                 setTimeout(() => {
-                    navigate('/dashboard'); // Redireciona para o dashboard
+                    navigate('/dashboard'); 
                 }, 1000);
                 
             } else {

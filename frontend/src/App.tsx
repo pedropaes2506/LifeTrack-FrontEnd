@@ -14,6 +14,7 @@ import MeuPerfil from './components/MeuPerfil';
 import AlterarSenhaPage from './components/AlterarSenha';
 import AboutPage from './components/AboutPage';
 import SupportPage from './components/SupportPage';
+import HabitsManageAdmin from './components/HabitsManageAdmin';
 
 // Componente Wrapper para proteger rotas privadas
 const PrivateRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
@@ -44,6 +45,9 @@ function App() {
           <Route path="/alterar-senha" element={<PrivateRoute element={<AlterarSenhaPage />} />} />
           <Route path="/sobre" element={<PrivateRoute element={<AboutPage />} />} />
           <Route path="/suporte" element={<PrivateRoute element={<SupportPage />} />} />
+
+          {/* Rotas de Admin */}
+          <Route path="/admin/rotinas" element={<PrivateRoute element={<HabitsManageAdmin />} />} />
         </Routes>
       </AuthProvider>
     </Router>
