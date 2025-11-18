@@ -1,0 +1,86 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--color-secondary-button);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    color: var(--color-text-light);
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.modal-content h4 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.goal-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background-color: var(--color-text-light);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.goal-adjust-btn {
+    background-color: var(--color-primary-dark);
+    color: var(--color-text-light);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.25rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.goal-adjust-btn:hover {
+    background-color: #2b2554;
+}
+
+.goal-display {
+    color: var(--color-text-dark);
+    font-size: 1.25rem;
+    font-weight: 700;
+    min-width: 150px;
+    text-align: center;
+}
+
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+}
+
+.modal-actions .button-base {
+    width: 100%;
+}
+
+.modal-actions .button-secondary-bg {
+    background-color: #8a84c2; 
+}
+.modal-actions .button-secondary-bg:hover {
+    background-color: #a09ccf;
+}

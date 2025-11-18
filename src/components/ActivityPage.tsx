@@ -1,39 +1,111 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import EditGoalModal from './EditGoalModal'; 
 import '../styles/App.css';
 import '../styles/ActivityPage.css'; 
+import { fetchActivityData, type ActivityData } from '../api';
 
 import { 
-    CalendarDays, Clock, Plus, 
-    type LucideIcon, 
+    CalendarDays, Clock, 
     CalendarCheck, 
-    CalendarX
+    CalendarX,
+    Undo,
+    Save, 
 } from 'lucide-react';
 
-interface ActivityPageProps {
-    title: string;
-    unit: string;
-    current: number;
-    goal: number;
-    addButtons: number[]; 
-    historyTime: { time: string; value: number }[];
-    historyDate: { date: string; percentage: number }[];
-    AddIcon: LucideIcon; 
-}
-
-const ActivityPage: React.FC<ActivityPageProps> = ({
-    title,
-    unit,
-    current,
-    goal,
-    addButtons,
-    historyTime,
-    historyDate,
-    AddIcon
-}) => {
+const ActivityPage: React.FC = () => {
     
-    const percentage = Math.round((current / goal) * 100);
+    const { slug } = useParams<{ slug: string }>();
+    const [data, setData] = useState<ActivityData | null>(null);
+    const [displayCurrent, setDisplayCurrent] = useState<number>(0);
+    
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [undoStack, setUndoStack] = useState<number[]>([]);
+
+    useEffect(() => {
+        if (slug) {
+            const loadData = async () => {
+                setData(null); 
+                const result = await fetchActivityData(slug);
+                setData(result); 
+                if (result) {
+                    setDisplayCurrent(result.current); 
+                }
+                setUndoStack([]); 
+            };
+            loadData();
+        }
+    }, [slug]);
+
+    const handleEditGoal = () => {
+        setIsModalOpen(true); 
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleSaveGoal = (newGoal: number) => {
+        if (data) {
+            const newData = { ...data, goal: newGoal, current: 0 };
+            setData(newData); 
+            setDisplayCurrent(0); 
+            setUndoStack([]); 
+            console.log(`Nova meta salva para ${slug}: ${newGoal}`);
+        }
+    };
+
+    const handleAddConsumption = (amount: number) => {
+        if (!data) return;
+        setUndoStack(prevStack => [...prevStack, displayCurrent]);
+        setDisplayCurrent(prev => Math.min(prev + amount, data.goal));
+    };
+
+    const handleRemoveConsumption = (amount: number) => {
+        if (!data) return;
+        setUndoStack(prevStack => [...prevStack, displayCurrent]);
+        setDisplayCurrent(prev => Math.max(0, prev - amount));
+    };
+
+    const handleUndo = () => {
+        if (!data || undoStack.length === 0) return; 
+
+        const lastState = undoStack[undoStack.length - 1];
+        const newStack = undoStack.slice(0, -1); 
+
+        setDisplayCurrent(lastState);
+        setUndoStack(newStack);
+    };
+
+    const handleSaveChanges = () => {
+        if (!data) return;
+        
+        setData({ ...data, current: displayCurrent });
+        setUndoStack([]); 
+        
+        console.log(`Salvando progresso no backend: ${displayCurrent}`);
+    };
+
+    if (!data) {
+        return (
+            <div className="dashboard-layout">
+                <Header />
+                <Sidebar />
+                <main className="dashboard-main-content">
+                    <div className="hydration-header">
+                        <h2>Carregando...</h2>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
+    const { title, unit, goal, addButtons, historyTime, historyDate, Icon } = data;
+    const isChanged = data.current !== displayCurrent;
+
+    const percentage = goal > 0 ? Math.round((displayCurrent / goal) * 100) : 0;
     const circumference = 314; 
     const progressOffset = circumference * (1 - (percentage / 100));
 
@@ -71,8 +143,24 @@ const ActivityPage: React.FC<ActivityPageProps> = ({
                         </svg>
 
                         <div className="progress-stats">
-                            <span>Progresso: <strong>{current} {unit}</strong></span> 
+                            <span>Progresso: <strong>{displayCurrent} {unit}</strong></span> 
                             <span>Meta: <strong>{goal} {unit}</strong></span> 
+                        </div>
+
+                        <div className="progress-buttons-container">
+                            <button 
+                                className="button-base button-primary-dark edit-goal-btn" 
+                                onClick={handleEditGoal}
+                            >
+                                Editar Meta
+                            </button>
+                            <button 
+                                className="button-base button-secondary-bg save-progress-btn"
+                                onClick={handleSaveChanges}
+                                disabled={!isChanged}
+                            >
+                                <Save size={16} /> Salvar Alteração
+                            </button>
                         </div>
                     </div>
 
@@ -82,13 +170,34 @@ const ActivityPage: React.FC<ActivityPageProps> = ({
                         <h3>Adicionar consumo:</h3>
                         <div className="consumption-buttons">
                             {addButtons.map((value) => (
-                                <button key={value} className="consumption-btn">
-                                    <AddIcon size={18} /> +{value} {unit}
+                                <button 
+                                    key={value} 
+                                    className="consumption-btn"
+                                    onClick={() => handleAddConsumption(value)}
+                                >
+                                    <Icon size={18} /> +{value} {unit}
                                 </button>
                             ))}
-                            <button className="consumption-btn plus">
-                                <Plus size={18} />
+                            <button 
+                                className="consumption-btn undo"
+                                onClick={handleUndo}
+                                disabled={undoStack.length === 0}
+                            >
+                                <Undo size={18} />
                             </button>
+                        </div>
+
+                        <h3>Remover consumo:</h3>
+                        <div className="consumption-buttons">
+                            {addButtons.map((value) => (
+                                <button 
+                                    key={value} 
+                                    className="consumption-btn remove"
+                                    onClick={() => handleRemoveConsumption(value)}
+                                >
+                                    <Icon size={18} /> -{value} {unit}
+                                </button>
+                            ))}
                         </div>
 
                         <h3>Histórico:</h3>
@@ -124,6 +233,16 @@ const ActivityPage: React.FC<ActivityPageProps> = ({
                     </div>
                 </div>
             </main>
+
+            {isModalOpen && (
+                <EditGoalModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    onSave={handleSaveGoal}
+                    currentGoal={data.goal}
+                    unit={data.unit}
+                />
+            )}
         </div>
     );
 };

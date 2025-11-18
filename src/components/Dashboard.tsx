@@ -23,7 +23,8 @@ const DashboardPage: React.FC = () => {
 
                 <div className="habit-grid">
                     
-                    <Link to="/hidratacao" className="habit-card-link">
+                    {/* MUDANÇA: Link dinâmico */}
+                    <Link to="/rotina/hidratacao" className="habit-card-link">
                         <HabitCard 
                             Icon={Droplet} 
                             title="Hidratação"
@@ -33,7 +34,8 @@ const DashboardPage: React.FC = () => {
                         />
                     </Link>
 
-                    <Link to="/exercicio" className="habit-card-link">
+                    {/* MUDANÇA: Link dinâmico */}
+                    <Link to="/rotina/exercicio" className="habit-card-link">
                         <HabitCard 
                             Icon={Dumbbell} 
                             title="Exercício"
@@ -43,7 +45,8 @@ const DashboardPage: React.FC = () => {
                         />
                     </Link>
 
-                    <Link to="/dashboard" className="habit-card-link">
+                    {/* Links de placeholder */}
+                    <Link to="/rotina/sono" className="habit-card-link">
                         <HabitCard 
                             Icon={Bed} 
                             title="Sono"
@@ -52,8 +55,7 @@ const DashboardPage: React.FC = () => {
                             unit=" horas"
                         />
                     </Link>
-
-                    <Link to="/dashboard" className="habit-card-link">
+                    <Link to="/rotina/meditacao" className="habit-card-link">
                         <HabitCard 
                             Icon={Brain} 
                             title="Meditação"
@@ -62,8 +64,7 @@ const DashboardPage: React.FC = () => {
                             unit=" min"
                         />
                     </Link>
-
-                    <Link to="/dashboard" className="habit-card-link">
+                    <Link to="/rotina/alimentacao" className="habit-card-link">
                         <HabitCard 
                             Icon={Utensils} 
                             title="Alimentação"
@@ -72,8 +73,7 @@ const DashboardPage: React.FC = () => {
                             unit=" un"
                         />
                     </Link>
-
-                    <Link to="/dashboard" className="habit-card-link">
+                    <Link to="/rotina/estudo" className="habit-card-link">
                         <HabitCard 
                             Icon={BookOpen} 
                             title="Estudo"
