@@ -12,6 +12,8 @@ import HabitsManageAdmin from './components/HabitsManageAdmin';
 import AlterarSenha from './components/AlterarSenha';
 import MeuPerfil from './components/MeuPerfil';
 import Calculadora from './components/Calculadora';
+import AboutPage from './components/AboutPage';
+import SupportPage from './components/SupportPage';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
         <Route path="/alterar-senha" element={<AlterarSenha />} />
         <Route path="/meu-perfil" element={<MeuPerfil />} />
         <Route path="/calculadora" element={<Calculadora />} />
+        <Route path="/sobre" element={<AboutPage />} />
+        <Route path="/suporte" element={<SupportPage />} />
       </Routes>
     </Router>
   );
