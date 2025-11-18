@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import { autenticarToken } from '../middleware.js'; 
+import bcrypt from 'bcrypt'; 
+import { enviarEmail } from './mail.js'; // ⬅️ IMPORTAÇÃO DA FUNÇÃO ENVIAR EMAIL
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -27,37 +29,28 @@ function getAddButtons(tipoUnidade) {
     }
 }
 
-// ⬅️ NOVO: Função para garantir que o dia anterior foi "fechado"
-// Esta função é chamada na primeira requisição do dia (ou ao carregar a página)
-// para calcular e persistir o status final (Completa/Incompleta) do dia anterior.
+// ⬅️ FUNÇÃO EXISTENTE: Garante que o dia anterior foi "fechado"
 async function ensureDayClosure(prismaInstance, adesaoId, rotinaMeta) {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0); 
     
-    // 1. Encontrar o último dia com atividade, mas que é anterior a hoje.
     const ultimoRegistroAntesHoje = await prismaInstance.RegistroRotina.findFirst({
         where: {
             adesaoId: adesaoId,
-            dataRegistro: {
-                lt: hoje,
-            }
+            dataRegistro: { lt: hoje }
         },
         orderBy: { dataRegistro: 'desc' },
     });
     
     if (!ultimoRegistroAntesHoje) {
-        return; // Sem atividade anterior a hoje
+        return; 
     }
 
     const dataUltimoRegistro = ultimoRegistroAntesHoje.dataRegistro;
-    dataUltimoRegistro.setHours(0, 0, 0, 0); // Dia que o último registro foi feito
+    dataUltimoRegistro.setHours(0, 0, 0, 0); 
     
-    // 2. Encontrar o último registro de FECHAMENTO (onde metaCumprida não é NULL)
     const ultimoFechamento = await prismaInstance.RegistroRotina.findFirst({
-        where: {
-            adesaoId: adesaoId,
-            metaCumprida: { not: null } 
-        },
+        where: { adesaoId: adesaoId, metaCumprida: { not: null } },
         orderBy: { dataRegistro: 'desc' },
     });
     
@@ -67,100 +60,180 @@ async function ensureDayClosure(prismaInstance, adesaoId, rotinaMeta) {
         ultimoDiaFechado.setHours(0, 0, 0, 0); 
     }
     
-    // 3. Itera sobre os dias que tiveram atividade, mas que não foram fechados, até o dia anterior a hoje
     let diaAFechar = new Date(ultimoDiaFechado);
-    // Se o último dia fechado é o início de tudo, começamos pelo primeiro dia de atividade
+    
     if (diaAFechar.getTime() === new Date(0).getTime()) {
         diaAFechar = new Date(dataUltimoRegistro);
         diaAFechar.setHours(0, 0, 0, 0);
     } else {
-         // Se o dia já foi fechado, move para o dia seguinte (último dia fechado + 1)
          diaAFechar.setDate(diaAFechar.getDate() + 1);
     }
 
-    // Enquanto o dia a fechar for anterior a hoje.
     while (diaAFechar < hoje) {
         
         let diaFim = new Date(diaAFechar);
-        diaFim.setDate(diaFim.getDate() + 1); // Fim do dia a fechar (00:00 do próximo dia)
+        diaFim.setDate(diaFim.getDate() + 1); 
 
-        // Buscar todos os registros do dia a fechar
         const registrosDoDia = await prismaInstance.RegistroRotina.findMany({
             where: {
                 adesaoId: adesaoId,
-                dataRegistro: {
-                    gte: diaAFechar,
-                    lt: diaFim,
-                },
+                dataRegistro: { gte: diaAFechar, lt: diaFim }
             },
             select: { valorRegistro: true, metaCumprida: true }, 
         });
         
-        // Se há registros e nenhum deles é um registro de fechamento (metaCumprida != null)
         const jaFechado = registrosDoDia.some(reg => reg.metaCumprida !== null);
 
         if (!jaFechado && registrosDoDia.length > 0) {
             
-            // Calcula o total do dia
             const totalDia = registrosDoDia.reduce((sum, reg) => sum + (parseFloat(reg.valorRegistro) || 0), 0);
             const metaCompleta = totalDia >= rotinaMeta;
 
-            // Criar o registro de FECHAMENTO (Metadado)
-            // Data do fechamento: 23:59:59 do dia a fechar
             let dataFechamento = new Date(diaAFechar);
             dataFechamento.setHours(23, 59, 59, 999); 
             
             await prismaInstance.RegistroRotina.create({
                 data: {
                     adesaoId: adesaoId,
-                    valorRegistro: 0, // Valor 0, pois é apenas um metadado de fechamento
+                    valorRegistro: 0, 
                     dataRegistro: dataFechamento, 
-                    metaCumprida: metaCompleta, // Status final persistido
+                    metaCumprida: metaCompleta, 
                 },
             });
         }
         
-        // Avança para o próximo dia.
         diaAFechar.setDate(diaAFechar.getDate() + 1);
     }
 }
 
 
-// Função utilitária AGORA INCLUI A LÓGICA DE HISTÓRICO DE 5 DIAS
+// ⬅️ FUNÇÃO AUXILIAR: Calcula o status (verde, amarelo, vermelho) de um dia
+async function calculateDailyProgressSummary(prismaInstance, userId, date) {
+    const inicioDia = new Date(date);
+    inicioDia.setHours(0, 0, 0, 0);
+    const fimDia = new Date(inicioDia);
+    fimDia.setDate(fimDia.getDate() + 1);
+
+    const adesoes = await prismaInstance.Adesao.findMany({
+        where: {
+            usuarioId: userId,
+            statusAdesao: true,
+            dataAdesao: { lt: fimDia } 
+        },
+        select: { id: true, metaPessoalValor: true }
+    });
+
+    if (adesoes.length === 0) {
+        return { status: 'none' }; 
+    }
+
+    let completedGoals = 0;
+    const totalGoals = adesoes.length;
+    
+    const progressoPromessas = adesoes.map(async (adesao) => {
+        
+        const registrosDoDia = await prismaInstance.RegistroRotina.findMany({
+            where: {
+                adesaoId: adesao.id,
+                dataRegistro: { gte: inicioDia, lt: fimDia },
+                metaCumprida: null, 
+            },
+            select: { valorRegistro: true },
+        });
+
+        const totalConsumido = registrosDoDia.reduce((sum, reg) => sum + (parseFloat(reg.valorRegistro) || 0), 0);
+        return totalConsumido >= adesao.metaPessoalValor;
+    });
+
+    const resultados = await Promise.all(progressoPromessas);
+
+    resultados.forEach(isComplete => {
+        if (isComplete) {
+            completedGoals++;
+        }
+    });
+
+    let status = 'none';
+    if (totalGoals > 0) {
+        if (completedGoals === 0) { 
+            status = 'vermelho';
+        } else if (completedGoals === totalGoals) { 
+            status = 'verde';
+        } else { 
+            status = 'amarelo';
+        }
+    }
+    
+    return { status };
+}
+
+// ⬅️ FUNÇÃO PRINCIPAL: CALCULA O STREAK GLOBAL (Inclui 'verde' e 'amarelo')
+async function getGlobalStreakSummary(prismaInstance, userId, targetDate) {
+    let currentStreakCount = 0;
+    let streakDays = [];
+    let dayCursor = new Date(targetDate);
+    dayCursor.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const MAX_DAYS_CHECK = 365; 
+
+    for (let i = 0; i < MAX_DAYS_CHECK; i++) {
+        
+        if (dayCursor > today) { // Não verifica dias futuros
+            dayCursor.setDate(dayCursor.getDate() - 1); 
+            continue;
+        }
+
+        const summary = await calculateDailyProgressSummary(prismaInstance, userId, dayCursor);
+        const dayKey = `${dayCursor.getFullYear()}-${String(dayCursor.getMonth() + 1).padStart(2, '0')}-${String(dayCursor.getDate()).padStart(2, '0')}`;
+        
+        if (summary.status === 'verde' || summary.status === 'amarelo') {
+            currentStreakCount++;
+            streakDays.push(dayKey);
+        } else if (summary.status === 'vermelho') { 
+            break; 
+        } else if (summary.status === 'none') {
+             if (currentStreakCount > 0) break; 
+        }
+        
+        dayCursor.setDate(dayCursor.getDate() - 1); 
+    }
+    
+    streakDays.reverse();
+
+    return { 
+        count: currentStreakCount, 
+        streakDays: streakDays 
+    };
+}
+
+// ROTA EXISTENTE: Utilitária para ActivityPage
 async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, rotinaUnidade, rotinaMeta) {
     
     const addButtons = getAddButtons(rotinaUnidade);
     
-    // ⬅️ CHAMA O FECHAMENTO DO DIA antes de qualquer cálculo de histórico
     await ensureDayClosure(prismaInstance, adesaoId, rotinaMeta);
     
-    // --- Lógica de Data para o Registro Diário (HoJE) ---
     const hojeInicio = new Date();
     hojeInicio.setHours(0, 0, 0, 0); 
     const hojeFim = new Date(hojeInicio);
     hojeFim.setDate(hojeFim.getDate() + 1); 
     
-    // 1. Buscar TODOS os registros do dia ATUAL (apenas Deltas - metaCumprida: null)
+    // 1. Buscar TODOS os registros do dia ATUAL
     const registrosDiaDB = await prismaInstance.RegistroRotina.findMany({
         where: {
             adesaoId: adesaoId,
-            dataRegistro: {
-                gte: hojeInicio, 
-                lt: hojeFim,     
-            },
-            metaCumprida: null, // Filtra para pegar apenas os registros de delta (não fechamento)
+            dataRegistro: { gte: hojeInicio, lt: hojeFim },
+            metaCumprida: null, 
         },
         orderBy: { dataRegistro: 'asc' },
-        select: {
-            dataRegistro: true,
-            valorRegistro: true,
-        },
+        select: { dataRegistro: true, valorRegistro: true },
     });
 
-    // Calcular o Progresso Atual (Soma de todos os registros)
     const currentProgress = registrosDiaDB.reduce((sum, reg) => sum + (parseFloat(reg.valorRegistro) || 0), 0);
     
-    // Formatar Registros do Dia para o Frontend
     const registrosDiaFormatados = registrosDiaDB.map(reg => ({
         time: reg.dataRegistro.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }),
         value: reg.valorRegistro,
@@ -169,7 +242,6 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
     // --- Lógica de Histórico dos Últimos 5 Dias (REAL) ---
     let historicoMetas = [];
     
-    // Buscar a data de adesão para garantir que não buscamos antes do início
     const adesaoInfo = await prismaInstance.Adesao.findUnique({
         where: { id: adesaoId },
         select: { dataAdesao: true }
@@ -179,13 +251,11 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
         const dataAdesaoInicio = adesaoInfo.dataAdesao;
         dataAdesaoInicio.setHours(0, 0, 0, 0);
         
-        // Vamos iterar pelos últimos 5 dias, excluindo hoje
         for (let i = 1; i <= 5; i++) {
             let dia = new Date();
             dia.setDate(dia.getDate() - i); 
             dia.setHours(0, 0, 0, 0); 
 
-            // Se o dia for anterior à adesão, paramos a contagem
             if (dia < dataAdesaoInicio) {
                 break;
             }
@@ -193,33 +263,25 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
             let diaFim = new Date(dia);
             diaFim.setDate(diaFim.getDate() + 1);
 
-            // 3. Buscar o registro de FECHAMENTO do dia (o único com metaCumprida != null)
             const registroFechamento = await prismaInstance.RegistroRotina.findFirst({
                 where: {
                     adesaoId: adesaoId,
-                    dataRegistro: {
-                        gte: dia,
-                        lt: diaFim,
-                    },
-                    metaCumprida: { not: null }, // Busca o registro de metadados
+                    dataRegistro: { gte: dia, lt: diaFim },
+                    metaCumprida: { not: null }, 
                 },
                 orderBy: { dataRegistro: 'desc' },
             });
 
-
-            // Se encontrou o fechamento, usa o status persistido
             if (registroFechamento) {
                 const metaCompleta = registroFechamento.metaCumprida;
                 const dataFormatada = dia.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
                 historicoMetas.push({
                     date: dataFormatada,
-                    status: metaCompleta ? 'Completa' : 'Incompleta', // Usa o status persistido
+                    status: metaCompleta ? 'Completa' : 'Incompleta', 
                     isComplete: metaCompleta,
                 });
             }
-            // Se não encontrou o fechamento, o dia não teve atividade. A UX pode ignorar ou mostrar como incompleto.
-            // Para simplicidade, vamos apenas incluir dias que tiveram fechamento (ou seja, atividade).
         }
     }
     
@@ -231,25 +293,323 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
     };
 }
 
+// 🚀 NOVA ROTA: Enviar mensagem de Suporte
+router.post('/suporte/enviar-mensagem', autenticarToken, async (req, res) => {
+    const userId = req.user.id;
+    const { assunto, mensagem } = req.body;
+    
+    if (!assunto || !mensagem) {
+        return res.status(400).json({ message: "Assunto e mensagem são obrigatórios." });
+    }
+    
+    try {
+        const user = await prisma.user.findUnique({ 
+            where: { id: userId },
+            select: { email: true, nome: true }
+        });
+        
+        if (!user) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
 
-// ROTA EXISTENTE: Buscar Perfil do Usuário Logado
+        const remetenteEmail = user.email; // Email do usuário autenticado
+        
+        // Assumimos que o destinatário do suporte é o mesmo usuário SMTP configurado no .env
+        const destinatarioSuporte = process.env.SMTP_USER; 
+        
+        const corpoEmail = `
+            Nova mensagem de suporte de: ${user.nome} (${remetenteEmail})
+            Assunto: ${assunto}
+            
+            --------------------------------------
+            Mensagem:
+            ${mensagem}
+            --------------------------------------
+        `;
+        
+        await enviarEmail(
+            destinatarioSuporte,
+            `[LifeTrack Suporte] ${assunto}`,
+            corpoEmail
+        );
+        
+        res.json({ message: "Mensagem enviada com sucesso! Em breve entraremos em contato." });
+
+    } catch (err) {
+        console.error("Erro ao enviar email de suporte:", err);
+        res.status(500).json({ message: "Erro interno ao enviar a mensagem de suporte." });
+    }
+});
+
+
+// ROTA NOVA: Resumo da Ofensiva Global
+router.get('/progress/streak-summary', autenticarToken, async (req, res) => {
+    const userId = req.user.id; 
+    const today = new Date();
+    
+    try {
+        const summary = await getGlobalStreakSummary(prisma, userId, today);
+        
+        res.json(summary);
+    } catch (err) {
+        console.error("Erro ao buscar resumo da ofensiva global:", err);
+        res.status(500).json({ message: "Erro interno ao buscar dados da ofensiva." });
+    }
+});
+
+
+// ROTA NOVA: Resumo Mensal para Cores do Calendário
+router.get('/calendar/monthly-summary', autenticarToken, async (req, res) => {
+    const userId = req.user.id; 
+    const { ano, mes } = req.query; 
+    
+    if (!ano || !mes) {
+        return res.status(400).json({ message: "Ano e Mês são obrigatórios." });
+    }
+    
+    try {
+        const anoNum = parseInt(ano); 
+        const mesNum = parseInt(mes);
+        
+        const resumoMensal = {}; 
+        
+        const promises = [];
+        
+        for (let dia = 1; dia <= fimMes; dia++) {
+            const dataDia = new Date(anoNum, mesNum - 1, dia);
+            
+            promises.push(
+                calculateDailyProgressSummary(prisma, userId, dataDia).then(summary => {
+                    const dataKey = `${anoNum}-${String(mesNum).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                    if (dataDia <= new Date()) {
+                         resumoMensal[dataKey] = {
+                            status: summary.status
+                        };
+                    }
+                })
+            );
+        }
+        
+        await Promise.all(promises);
+
+        res.json(resumoMensal);
+
+    } catch (err) {
+        console.error("Erro ao buscar resumo mensal:", err);
+        res.status(500).json({ message: "Erro interno ao buscar dados do calendário." });
+    }
+});
+
+
+// ROTA NOVA: Detalhes Diários para o Card Lateral
+router.get('/calendar/daily-detail', autenticarToken, async (req, res) => {
+    const userId = req.user.id; 
+    const { data } = req.query; // data: YYYY-MM-DD
+    
+    if (!data) {
+        return res.status(400).json({ message: "Data é obrigatória." });
+    }
+    
+    try {
+        const dataDia = new Date(data); 
+        
+        const inicioDia = new Date(dataDia);
+        inicioDia.setHours(0, 0, 0, 0);
+        const fimDia = new Date(inicioDia);
+        fimDia.setDate(fimDia.getDate() + 1);
+
+        const adesoes = await prisma.Adesao.findMany({
+            where: {
+                usuarioId: userId,
+                statusAdesao: true,
+                dataAdesao: { lt: fimDia } 
+            },
+            select: {
+                id: true,
+                metaPessoalValor: true,
+                rotina: { select: { nome: true, tipoUnidade: true } }
+            }
+        });
+
+        if (adesoes.length === 0) {
+            return res.json({ 
+                dataSelecionada: dataDia.toLocaleDateString('pt-BR'), 
+                totalPorcentagem: 0, 
+                habitos: [] 
+            });
+        }
+        
+        let totalProgress = 0;
+        
+        const habitosDetalhe = await Promise.all(adesoes.map(async (adesao) => {
+            const registrosDoDia = await prisma.RegistroRotina.findMany({
+                where: {
+                    adesaoId: adesao.id,
+                    dataRegistro: { gte: inicioDia, lt: fimDia },
+                    metaCumprida: null, // Apenas deltas
+                },
+                select: { valorRegistro: true },
+            });
+            
+            const totalConsumido = registrosDoDia.reduce((sum, reg) => sum + (parseFloat(reg.valorRegistro) || 0), 0);
+            
+            const porcentagem = adesao.metaPessoalValor > 0 ? Math.min(Math.round((totalConsumido / adesao.metaPessoalValor) * 100), 100) : 100;
+
+            totalProgress += porcentagem;
+
+            return {
+                nome: adesao.rotina.nome,
+                porcentagem: porcentagem,
+                concluido: porcentagem >= 100,
+            };
+        }));
+        
+        const averageProgress = habitosDetalhe.length > 0 ? (totalProgress / habitosDetalhe.length) : 0;
+        
+        res.json({
+            dataSelecionada: dataDia.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }),
+            totalPorcentagem: Math.round(averageProgress),
+            habitos: habitosDetalhe,
+        });
+
+    } catch (error) {
+        console.error("Erro ao buscar detalhes diários:", error);
+        return res.status(500).json({ message: "Erro interno ao buscar detalhes do dia." });
+    }
+});
+
+
+// 🚀 ROTA ATUALIZADA: Buscar Perfil do Usuário Logado
 router.get('/perfil', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 
-            where: { email: req.user.email },
-            select: { id: true, email: true, nome: true } 
+            where: { id: req.user.id },
+            select: { 
+                id: true, 
+                email: true, 
+                nome: true,
+                sexo: true,
+                dataNascimento: true,
+            } 
         });
         
         if (!user) return res.status(404).json({ message: "Usuário não encontrado." });
+        
+        // Formata a data para YYYY-MM-DD
+        const dataFormatada = user.dataNascimento ? 
+            new Date(user.dataNascimento).toISOString().split('T')[0] : 
+            '';
 
-        res.json({ id: user.id, email: user.email, nome: user.nome });
+        // Retorna o sexo como M, F, O ou '' (string vazia) se for null
+        res.json({ 
+            id: user.id, 
+            email: user.email, 
+            nomeCompleto: user.nome,
+            sexo: user.sexo || '', 
+            dataNascimento: dataFormatada,
+        });
     } catch (err) {
         console.error("Erro ao buscar perfil:", err);
         res.status(500).json({ message: "Erro ao buscar perfil." });
     }
 });
 
-// NOVA ROTA: Listar todas as rotinas mestres disponíveis
+// 🚀 ROTA CORRIGIDA: Atualizar Perfil do Usuário Logado (PUT)
+router.put('/perfil', autenticarToken, async (req, res) => {
+    // req.user.id é injetado pelo middleware, garantindo que o usuário só altere o próprio perfil
+    const userId = req.user.id; 
+    const { nomeCompleto, sexo, dataNascimento } = req.body;
+    
+    try {
+        const updatedData = {};
+
+        // 1. Lógica para Nome Completo: Atualiza se não for nulo/vazio
+        if (nomeCompleto !== undefined && nomeCompleto !== null && nomeCompleto.trim() !== "") {
+            updatedData.nome = nomeCompleto.trim();
+        }
+        
+        // 2. Lógica para Sexo: Se o valor for a string vazia (''), salva NULL no BD
+        if (sexo !== undefined) {
+            updatedData.sexo = sexo.trim() === '' ? null : sexo;
+        }
+
+        // 3. Lógica para Data de Nascimento:
+        // Se for string vazia, E o campo é NOT NULL, OMITIMOS a chave para PRESERVAR o valor anterior.
+        if (dataNascimento !== undefined && dataNascimento.trim() !== "") {
+            updatedData.dataNascimento = new Date(dataNascimento);
+        } 
+
+
+        // Se o objeto estiver vazio, não faz nada
+        if (Object.keys(updatedData).length === 0) {
+             return res.status(400).json({ message: "Nenhum dado válido para atualização foi fornecido." });
+        }
+
+
+        const user = await prisma.User.update({ 
+            where: { id: userId }, 
+            data: updatedData, 
+            select: { id: true, email: true, nome: true }
+        });
+
+        res.json({ message: "Perfil atualizado com sucesso.", user });
+
+    } catch (err) {
+        console.error("Erro ao atualizar perfil:", err); 
+        res.status(500).json({ message: "Erro ao atualizar perfil." });
+    }
+});
+
+// 🚀 ROTA NOVA: Alterar Senha
+router.post('/senha/alterar', autenticarToken, async (req, res) => {
+    const userId = req.user.id; 
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.status(400).json({ message: "Todos os campos são obrigatórios." });
+    }
+    
+    if (newPassword !== confirmPassword) {
+        return res.status(400).json({ message: "A nova senha e a confirmação não coincidem." });
+    }
+    
+    try {
+        // 1. Buscar a senha atual do usuário (hash)
+        const user = await prisma.User.findUnique({
+            where: { id: userId },
+            select: { senha: true } 
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+
+        // 2. Comparar a senha atual fornecida com o hash no banco
+        const isCurrentPasswordCorrect = await bcrypt.compare(currentPassword, user.senha);
+
+        if (!isCurrentPasswordCorrect) {
+            return res.status(401).json({ message: "Senha atual incorreta." });
+        }
+
+        // 3. Gerar o hash para a nova senha
+        const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+        // 4. Atualizar a senha no banco de dados
+        await prisma.User.update({
+            where: { id: userId },
+            data: { senha: newPasswordHash }
+        });
+
+        res.json({ message: "Senha alterada com sucesso." });
+
+    } catch (err) {
+        console.error("Erro ao alterar senha:", err);
+        res.status(500).json({ message: "Erro interno ao alterar a senha." });
+    }
+});
+
+
+// ROTA NOVA: Listar todas as rotinas mestres disponíveis
 router.get('/rotinas/disponiveis', autenticarToken, async (req, res) => {
     try {
         const rotinas = await prisma.Rotina.findMany({ 
@@ -268,7 +628,7 @@ router.get('/rotinas/disponiveis', autenticarToken, async (req, res) => {
     }
 });
 
-// NOVA ROTA: Obter as rotinas que o usuário já aderiu
+// ROTA NOVA: Obter as rotinas que o usuário já aderiu
 router.get('/rotinas/minhas', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 

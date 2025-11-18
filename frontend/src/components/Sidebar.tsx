@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
                 </li>
                 <li>
                     <NavLink 
-                        to="/metas" 
+                        to="/ofensiva" 
                         className={({ isActive }) => isActive ? "sidebar-item active" : "sidebar-item"}
                     >
                         <Flame size={28} />
@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
             
             <div className="sidebar-footer">
                 <NavLink 
-                    to="/info"
+                    to="/sobre"
                     className={({ isActive }) => isActive ? "sidebar-item active" : "sidebar-item"}
                 >
                     <Info size={28} />

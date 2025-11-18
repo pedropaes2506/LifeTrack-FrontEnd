@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/Header.css'; 
 import logo from '../assets/logo.png';
 import { Link, NavLink } from 'react-router-dom';
-import { Settings, User } from 'lucide-react';
+import { User } from 'lucide-react';
 
 interface HeaderProps {
     showActions?: boolean;
@@ -22,12 +22,6 @@ const Header: React.FC<HeaderProps> = ({ showActions = true }) => {
             
             {showActions && (
                 <div className="header-actions">
-                    <NavLink 
-                        to="/configuracoes" 
-                        className={({ isActive }) => isActive ? "header-action-item active" : "header-action-item"}
-                    >
-                        <Settings size={24} />
-                    </NavLink>
                     <NavLink 
                         to="/perfil" 
                         className={({ isActive }) => isActive ? "header-action-item active" : "header-action-item"}

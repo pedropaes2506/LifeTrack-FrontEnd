@@ -39,7 +39,7 @@ services:
       DATABASE_URL: "mysql://root:root@db:3306/lifetrack"
     # Adicione o comando para iniciar o servidor Node após instalar dependências
     # Você pode querer substituir "tail -f /dev/null" por "npm start" ou similar
-    command: sh -c "npm install && npm start"
+    command: sh -c "npm install && npm start && npx prisma generate && tsx watch server.js"
     
   # 3. SERVIÇO DE BANCO DE DADOS
   db:
