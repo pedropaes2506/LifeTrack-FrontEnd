@@ -1,0 +1,167 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background-light);
+}
+
+.ofensiva-page-container {
+  width: 100%;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  padding-top: 40px;
+  padding-left: 140px;
+  padding-right: 70px;
+}
+
+
+.ofensiva-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.ofensiva-page-title-group h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+}
+
+.ofensiva-page-title-group p {
+  font-size: 1.25rem;
+  opacity: 0.8;
+  color: var(--color-text-dark);
+}
+
+
+.ofensiva-days-card {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 0.75rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: fit-content;
+  margin-bottom: 1rem;
+
+
+  align-self: flex-end;
+}
+
+.ofensiva-thumb-icon {
+  font-size: 1.2rem;
+}
+
+
+.ofensiva-main-content {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.ofensiva-widget-container {
+  flex: 1;
+
+
+  max-width: 1500px;
+
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+
+  display: flex;
+  flex-direction: column;
+}
+
+.ofensiva-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  user-select: none;
+}
+
+.ofensiva-widget-header h2 {
+  margin: 0;
+  color: #3b3b3b;
+  font-size: 1.5rem;
+}
+
+/* Botões de navegação (< e >) */
+.ofensiva-nav-button {
+  background: #4a3c6f;
+  /* Roxo */
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.ofensiva-nav-button:hover {
+  background: #3b2f5a;
+}
+
+/* Grid e dias do Calendário */
+.ofensiva-widget-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.ofensiva-day-header {
+  font-weight: bold;
+  color: #888;
+  font-size: 0.9rem;
+  padding-bottom: 0.5rem;
+}
+
+.ofensiva-day {
+  padding: 0.8rem 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+  background: #f9f9f9;
+}
+
+.ofensiva-day:hover {
+  background: #f0f0f0;
+}
+
+/* Estilos de destaque dos dias */
+.ofensiva-day-other-month {
+  color: #bbb;
+  background: #fff;
+}
+
+/* Destaque AZUL para dias de ofensiva */
+.ofensiva-day-highlight-blue {
+  background-color: #e0f2f7;
+  /* Azul claro */
+  color: #0288d1;
+  /* Azul mais escuro */
+}
+
+/* Dia "de hoje" (com destaque azul + borda) */
+.ofensiva-day-today {
+  background-color: #e0f2f7;
+  color: #0288d1;
+  border: 2px solid #0277bd;
+  /* Borda azul */
+  padding: calc(0.8rem - 2px);
+  border-radius: 6px;
+}
