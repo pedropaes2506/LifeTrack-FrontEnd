@@ -1,9 +1,6 @@
-/* Estilos para: src/styles/ManageHabitsPage.css */
-
 .manage-habits-container {
   width: 100%;
-  /* 🚀 FIX 1: Adicionar padding para compensar a Sidebar (100px) e adicionar espaço vertical/horizontal padrão */
-  padding-left: 140px; /* Offset da Sidebar + padding interno */
+  padding-left: 140px;
   padding-right: 2rem; 
   padding-top: 2rem; 
   padding-bottom: 2rem;
@@ -29,9 +26,6 @@
 .habits-list-header,
 .habit-row {
   display: grid;
-  /* 🚀 FIX 2: Alterar para 6 colunas e corrigir o alinhamento da Tabela.
-     Colunas: ID(0.5fr) | Nome(3fr) | Medida(1.5fr) | Meta(1.5fr) | Ativo(0.5fr) | Ações(1fr) 
-  */
   grid-template-columns: 0.5fr 3fr 1.5fr 1.5fr 0.5fr 1fr;
   gap: 1rem;
   padding: 1rem 1.5rem;
@@ -123,8 +117,6 @@
 .btn-habits-new:hover {
   background-color: #333;
 }
-
-/* --- ESTILOS DOS MODAIS (COMEÇA AQUI) --- */
 
 /* Animação de Fade-in para o fundo */
 @keyframes fadeInOverlay {
@@ -269,8 +261,6 @@
   background-color: #c9302c;
 }
 
-/* --- ESTILOS DO CHECKBOX (MAIOR) --- */
-
 /* Estilo para o grupo do Checkbox */
 .checkbox-group-admin {
   display: flex;
@@ -307,8 +297,6 @@
   transition: background-color 0.1s;
 }
 
-/* --- MUDANÇA AQUI --- */
-/* "Check" (quando marcado) */
 .checkbox-group-admin input[type="checkbox"]::before {
   content: "";
   
@@ -317,7 +305,6 @@
   height: 1.15em;
 
   /* 2. Remove o box-shadow e cria a forma de "L" com bordas */
-  /* box-shadow: inset 1em 1em var(--color-secondary-button, #5d57a6); */
   border: solid #2e7d32; /* <-- O "check" verde */
   border-width: 0 0.2em 0.2em 0; /* Borda da direita e de baixo */
 

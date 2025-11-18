@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -165,7 +166,7 @@ const MeuPerfil: React.FC = () => {
                                     />
                                 </div>
 
-                                {/* SEXO (COM OPÇÕES CORRIGIDAS) */}
+                                {/* SEXO */}
                                 <div className="campo-perfil">
                                     <label htmlFor="sexo">Sexo</label>
                                     <select

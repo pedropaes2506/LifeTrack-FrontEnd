@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './Header'; 
 import Sidebar from './Sidebar';
@@ -5,7 +6,6 @@ import { useAuth, API_BASE_URL } from '../context/AuthContext';
 import '../styles/App.css'; 
 import '../styles/HabitsManageAdmin.css'; 
 
-// --- Ícones SVG ---
 const EditIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="#333">
     <path d="M0 0h24v24H0z" fill="none"/><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
@@ -17,9 +17,7 @@ const DeleteIcon = () => (
     <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
   </svg>
 );
-// --- Fim dos Ícones ---
 
-// --- Tipos de Dados ---
 type TipoUnidade = 'ML' | 'HORAS' | 'MINUTOS' | 'UNIDADE' | 'PASSOS';
 
 interface Rotina {
@@ -40,7 +38,6 @@ const unitOptions: { label: string; value: TipoUnidade }[] = [
 
 const API_ADMIN_URL = API_BASE_URL.replace('/public', '/admin'); 
 
-// --- COMPONENTE MODAL: Adicionar Hábito ---
 const AddHabitModal: React.FC<{ onClose: () => void; onSave: () => void; }> = ({ onClose, onSave }) => {
   const { token } = useAuth();
   const [name, setName] = useState('');
@@ -120,10 +117,8 @@ const AddHabitModal: React.FC<{ onClose: () => void; onSave: () => void; }> = ({
     </div>
   );
 };
-// --- FIM MODAL ADICIONAR ---
 
 
-// --- COMPONENTE MODAL: Editar Hábito ---
 const EditHabitModal: React.FC<{ habit: Rotina; onClose: () => void; onSave: () => void; }> = ({ habit, onClose, onSave }) => {
   const { token } = useAuth();
   const [name, setName] = useState(habit.nome);
@@ -216,10 +211,7 @@ const EditHabitModal: React.FC<{ habit: Rotina; onClose: () => void; onSave: () 
     </div>
   );
 };
-// --- FIM MODAL EDITAR ---
 
-
-// --- COMPONENTE MODAL: Excluir Hábito ---
 const DeleteModal: React.FC<{ habit: Rotina; onClose: () => void; onConfirm: () => void; }> = ({ habit, onClose, onConfirm }) => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -268,13 +260,10 @@ const DeleteModal: React.FC<{ habit: Rotina; onClose: () => void; onConfirm: () 
     </div>
   );
 };
-// --- FIM MODAL EXCLUIR ---
 
 
-// --- COMPONENTE PRINCIPAL DA PÁGINA ---
 const HabitsManageAdmin: React.FC = () => {
   const { token } = useAuth();
-  // --- Estados da Página ---
   const [habits, setHabits] = useState<Rotina[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -284,7 +273,6 @@ const HabitsManageAdmin: React.FC = () => {
   const [habitToDelete, setHabitToDelete] = useState<Rotina | null>(null);
   const [habitToEdit, setHabitToEdit] = useState<Rotina | null>(null);
 
-  // --- Função de Leitura (READ) ---
   const fetchHabits = useCallback(async () => {
     if (!token) return;
     setLoading(true);
@@ -314,7 +302,6 @@ const HabitsManageAdmin: React.FC = () => {
   }, [fetchHabits]);
 
 
-  // --- Funções de Manipulação de Modal ---
   
   const handleOpenEditModal = (habit: Rotina) => {
     setHabitToEdit(habit);
@@ -332,7 +319,7 @@ const HabitsManageAdmin: React.FC = () => {
     setIsEditModalOpen(false);
     setHabitToDelete(null);
     setHabitToEdit(null);
-    fetchHabits(); // ⬅️ Recarrega a lista após qualquer CRUD
+    fetchHabits();
   };
 
 
@@ -377,12 +364,10 @@ const HabitsManageAdmin: React.FC = () => {
             </div>
 
             <div className="habits-actions-footer">
-              {/* O botão Salvar Alterações é redundante para CRUD via API e foi removido */}
               <button className="btn-habits-new" onClick={() => setIsAddModalOpen(true)}>+ Novo Hábito</button>
             </div>
           </div>
           
-          {/* --- Renderização Condicional dos Modais --- */}
           {isAddModalOpen && <AddHabitModal onClose={handleCloseModals} onSave={handleCloseModals} />}
           
           {isEditModalOpen && habitToEdit && (

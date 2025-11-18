@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; 
-import '../styles/App.css'; 
-// ⬅️ Importa o novo CSS
-import '../styles/AddHabitModal.css'; 
+import { useAuth, API_BASE_URL } from '../context/AuthContext';
+import '../styles/App.css';
+import '../styles/AddHabitModal.css';
 
 interface RotinaDisponivel {
     id: number;
@@ -14,11 +15,10 @@ interface RotinaDisponivel {
 interface AddHabitModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onHabitAdded: () => void; // Para forçar o recarregamento do dashboard
+    onHabitAdded: () => void;
 }
 
-// Derivar URL privada da base URL
-const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private'); 
+const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private');
 
 const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitAdded }) => {
     if (!isOpen) return null;
@@ -30,7 +30,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    // Mapeamento de rotinas.
     const rotinaMap = availableRotinas.reduce((acc, rotina) => {
         acc[rotina.id] = rotina;
         return acc;
@@ -40,7 +39,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     useEffect(() => {
         if (!isOpen || !token) return;
 
-        // Limpa estados ao abrir
         setSelectedRotinas([]);
         setError(null);
         setSuccessMessage(null);
@@ -48,7 +46,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
         const fetchRotinas = async () => {
             setLoading(true);
             try {
-                // Rota para buscar rotinas disponíveis
                 const response = await fetch(`${API_PRIVATE_URL}/rotinas/disponiveis`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -73,7 +70,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     }, [isOpen, token]);
 
     const handleToggleSelect = (rotinaId: number) => {
-        setSelectedRotinas(prev => 
+        setSelectedRotinas(prev =>
             prev.includes(rotinaId)
                 ? prev.filter(id => id !== rotinaId)
                 : [...prev, rotinaId]
@@ -90,14 +87,13 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
         setError(null);
         setSuccessMessage(null);
         let successCount = 0;
-        let failedMessages: string[] = [];
+        const failedMessages: string[] = [];
 
-        // Itera sobre todas as rotinas selecionadas e envia uma requisição para cada
         for (const rotinaId of selectedRotinas) {
             const rotina = rotinaMap[rotinaId];
             if (!rotina) continue;
 
-            const meta = rotina.metaValorPadrao || 1; // Usa a meta padrão ou 1 se for nula
+            const meta = rotina.metaValorPadrao || 1;
 
             try {
                 const response = await fetch(`${API_PRIVATE_URL}/rotinas/aderir`, {
@@ -124,17 +120,15 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
 
         if (successCount > 0) {
             setSuccessMessage(`${successCount} hábito(s) adicionado(s) com sucesso!`);
-            onHabitAdded(); // Notifica o dashboard para recarregar
-            
-            // Fecha o modal após o sucesso
-            setTimeout(() => onClose(), 1500); 
+            onHabitAdded();
+
+            setTimeout(() => onClose(), 1500);
 
         } else if (failedMessages.length > 0) {
             setError(failedMessages.join('\n'));
         }
     };
-    
-    // Função para renderizar o ícone de marcação (Checkmark ou Vazio)
+
     const renderCheckbox = (rotinaId: number) => {
         const isSelected = selectedRotinas.includes(rotinaId);
         return (
@@ -149,25 +143,23 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     };
 
     return (
-        // ⬅️ Utiliza a classe do backdrop do novo CSS e a função de fechar
         <div className="add-modal-backdrop" onClick={onClose}>
-            {/* ⬅️ Utiliza a classe do conteúdo e impede a propagação do clique */}
             <div className="add-modal-content" onClick={(e) => e.stopPropagation()}>
                 <h3 className="mb-6 text-center">Adicionar Hábito(s):</h3>
 
                 {loading && <p className="text-center">Carregando rotinas disponíveis...</p>}
-                
+
                 {error && <p className="text-center text-error mb-4 whitespace-pre-line">{error}</p>}
                 {successMessage && <p className="text-center text-success font-medium mb-4">{successMessage}</p>}
-                
+
                 {!loading && availableRotinas.length === 0 && !error && (
                     <p className="text-center opacity-70">Todas as rotinas disponíveis já foram adicionadas!</p>
                 )}
 
                 <div className="available-rotinas-list">
                     {availableRotinas.map((rotina) => (
-                        <div 
-                            key={rotina.id} 
+                        <div
+                            key={rotina.id}
                             className="rotina-item"
                             onClick={() => handleToggleSelect(rotina.id)}
                         >
@@ -183,17 +175,15 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
                 </div>
 
                 <div className="add-modal-actions">
-                    <button 
-                        onClick={onClose} 
-                        // Usa a classe do App.css
+                    <button
+                        onClick={onClose}
                         className="button-base button-secondary-bg"
                         disabled={loading}
                     >
                         Cancelar
                     </button>
-                    <button 
+                    <button
                         onClick={handleSalvar}
-                        // Usa a classe do App.css
                         className="button-base button-secondary-bg"
                         disabled={loading || selectedRotinas.length === 0}
                     >

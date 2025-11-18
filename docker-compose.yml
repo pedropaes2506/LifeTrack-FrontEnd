@@ -18,28 +18,37 @@ services:
       
   # 2. SERVIÇO DE BACKEND
   app:
-    image: node:22
-    platform: linux/arm64 
-    # O diretório de trabalho agora é o '/app' dentro do container
-    working_dir: /app
+    # Use o Dockerfile criado na pasta 'backend' para o build
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # Removido 'image'
+    # Removido 'platform' (o Dockerfile deve tratar a imagem base)
+    container_name: lifetrack-app-1
+    working_dir: /backend
     volumes:
-      # Monta a pasta 'backend' do host na pasta '/app' do container
-      - ./backend:/app 
+      # Monta o código-fonte para que as mudanças no host (VS Code) sejam refletidas (hot-reload)
+      - ./backend:/backend 
+      - /backend/node_modules
+      # Adicione volume para node_modules se você quiser garantir que as libs fiquem no host, mas pode causar problemas de permissão.
+      # É melhor confiar no RUN npm install do Dockerfile.
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      # Espera o DB estar rodando
+      db:
+        condition: service_started # Pode ser trocado por service_healthy se você adicionar healthcheck ao DB
     environment:
-      # ... Suas variáveis de ambiente
-      DB_HOST: db
+      # Variáveis de ambiente
+      DB_HOST: db # Nome do serviço DB
       DB_PORT: 3306
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: lifetrack
       DATABASE_URL: "mysql://root:root@db:3306/lifetrack"
-    # Adicione o comando para iniciar o servidor Node após instalar dependências
-    # Você pode querer substituir "tail -f /dev/null" por "npm start" ou similar
-    command: sh -c "npm install && npm start && npx prisma generate && tsx watch server.js"
+    # O comando principal para iniciar o servidor Node agora está no Dockerfile, 
+    # usando o `CMD` ou `ENTRYPOINT` (ex: CMD ["npm", "start"])
+    # Removida a linha 'command' para evitar conflito.
     
   # 3. SERVIÇO DE BANCO DE DADOS
   db:

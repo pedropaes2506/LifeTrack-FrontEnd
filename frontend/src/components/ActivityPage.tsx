@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from './Header';
@@ -16,14 +17,12 @@ import {
     Save, 
 } from 'lucide-react';
 
-// Novo tipo de dado para o Histórico de Metas
 interface MetaHistoryItem {
     date: string;
     status: 'Completa' | 'Incompleta';
     isComplete: boolean;
 }
 
-// Novo tipo de dado para a página de atividade
 interface ActivityData {
     adesaoId: number;
     title: string;
@@ -35,7 +34,7 @@ interface ActivityData {
     historicoMetas: MetaHistoryItem[]; 
 }
 
-// Derivar URL privada da base URL
+
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private'); 
 
 const ActivityPage: React.FC = () => {
@@ -52,7 +51,7 @@ const ActivityPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    // FUNÇÃO PARA BUSCAR DETALHES DA ADESÃO NO BACKEND
+
     const loadData = useCallback(async () => {
         if (!adesaoId || !token) {
             if (!adesaoId) setError("ID da rotina ausente.");
@@ -140,7 +139,6 @@ const ActivityPage: React.FC = () => {
         }
     };
 
-    // Ações locais (adicionar/remover consumo)
     const handleAddConsumption = (amount: number) => {
         if (!data) return;
         setUndoStack(prevStack => [...prevStack, displayCurrent]);
@@ -163,24 +161,21 @@ const ActivityPage: React.FC = () => {
         setUndoStack(newStack);
     };
     
-    // LÓGICA DE API: Salva o DELTA (Diferença) como um novo registro
+
     const handleSaveChanges = async () => {
         if (!data || !token || !adesaoId) return;
         
         setError(null);
         setSuccessMessage(null);
         
-        // 1. Calcular o DELTA (a diferença que o usuário quer registrar)
         const deltaConsumido = displayCurrent - data.current; 
 
-        // 2. Verificar se houve alteração antes de salvar
         if (deltaConsumido === 0) {
             setSuccessMessage("Nenhuma alteração a ser salva.");
             return;
         }
 
         try {
-            // Envia o deltaConsumido, que será o valorRegistro no backend
             const response = await fetch(`${API_PRIVATE_URL}/registros/registrar`, {
                 method: 'POST',
                 headers: {
@@ -189,14 +184,13 @@ const ActivityPage: React.FC = () => {
                 },
                 body: JSON.stringify({ 
                     adesaoId: parseInt(adesaoId),
-                    valorConsumido: deltaConsumido, // Envia o DELTA
+                    valorConsumido: deltaConsumido, 
                 })
             });
 
             const result = await response.json();
             
             if (response.ok) {
-                // Sucesso: Recarrega os dados para que 'data.current' seja sincronizado
                 setSuccessMessage("Registro de consumo adicionado com sucesso!");
                 loadData(); 
             } else {

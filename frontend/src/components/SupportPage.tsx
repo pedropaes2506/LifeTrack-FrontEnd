@@ -98,7 +98,7 @@ const SupportPage: React.FC = () => {
                                         <ArrowIcon isOpen={openQuestion === item.id} />
                                     </div>
                                     
-                                    {/* NOVO: Conteúdo da resposta (só aparece se estiver aberto) */}
+                                    {/* Conteúdo da resposta (só aparece se estiver aberto) */}
                                     {openQuestion === item.id && (
                                         <div className="faq-answer">
                                             {item.answer}

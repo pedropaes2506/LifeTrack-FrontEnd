@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './Header'; 
 import Sidebar from './Sidebar';
@@ -9,7 +10,6 @@ import '../styles/OfensivaPage.css';
 
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private');
 
-// --- TIPOS DE DADOS E UTILITIES ---
 interface StreakSummary {
     count: number;
     streakDays: string[]; // Array de datas no formato 'YYYY-MM-DD'
@@ -81,7 +81,6 @@ const formatDateToISO = (date: Date): string => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
-// --- FIM UTILITIES ---
 
 
 const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -91,7 +90,6 @@ const OfensivaPage: React.FC = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // ESTADOS:
     const [dataAtual, setDataAtual] = useState(new Date(today.getFullYear(), today.getMonth(), 1)); 
     const [streakData, setStreakData] = useState<StreakSummary | null>(null);
     const [loading, setLoading] = useState(true);
@@ -100,7 +98,6 @@ const OfensivaPage: React.FC = () => {
     const daysData = getDaysInMonth(dataAtual);
     const monthYearString = dataAtual.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
-    // --- FUNÇÃO DE BUSCA DE DADOS DA OFENSIVA ---
     const fetchStreakSummary = useCallback(async () => {
         if (!token) {
             setLoading(false);
@@ -135,7 +132,6 @@ const OfensivaPage: React.FC = () => {
     }, [fetchStreakSummary]);
 
 
-    // --- HANDLERS DE NAVEGAÇÃO ---
     const handleMonthChange = (offset: number) => {
         setDataAtual(prevDate => {
             const newDate = new Date(prevDate);
@@ -144,9 +140,8 @@ const OfensivaPage: React.FC = () => {
         });
     };
     
-    // --- LÓGICA DE CLASSE DOS DIAS (DESTAQUE DA OFENSIVA) ---
     const getDayClassName = (day: CalendarDay) => {
-        let classNames = ['ofensiva-day'];
+        const classNames = ['ofensiva-day'];
         
         if (!day.isCurrentMonth) {
             classNames.push('ofensiva-day-other-month');
