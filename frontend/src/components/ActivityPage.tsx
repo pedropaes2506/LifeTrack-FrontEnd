@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import EditGoalModal from './EditGoalModal';
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; // ⬅️ Importa API_BASE_URL
-import { getIcon } from '../utils/Icons'; // ⬅️ Importa getIcon do local correto
+import { useAuth, API_BASE_URL } from '../context/AuthContext'; 
+import { getIcon } from '../utils/icons'; 
 import '../styles/App.css';
 import '../styles/ActivityPage.css';
 
@@ -16,21 +16,26 @@ import {
     Save, 
 } from 'lucide-react';
 
-// ⬅️ Novo tipo de dado baseado na estrutura esperada do backend
+// Novo tipo de dado para o Histórico de Metas
+interface MetaHistoryItem {
+    date: string;
+    status: 'Completa' | 'Incompleta';
+    isComplete: boolean;
+}
+
+// Novo tipo de dado para a página de atividade
 interface ActivityData {
     adesaoId: number;
     title: string;
     unit: string;
     goal: number;
-    current: number; // Progresso atual no dia
+    current: number; // Progresso TOTAL do dia (Soma de todos os deltas)
     addButtons: number[];
-    // Registros MOCK para o histórico do dia (seria um array de objetos)
-    registrosDia: { time: string; value: number }[]; 
-    // Histórico MOCK de cumprimento de metas em dias passados
-    historicoMetas: { date: string; percentage: number }[]; 
+    registrosDia: { time: string; value: number }[]; // Lista de deltas individuais
+    historicoMetas: MetaHistoryItem[]; 
 }
 
-// ⬅️ Derivar URL privada da base URL
+// Derivar URL privada da base URL
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private'); 
 
 const ActivityPage: React.FC = () => {
@@ -45,7 +50,7 @@ const ActivityPage: React.FC = () => {
     const [undoStack, setUndoStack] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null); // Para mensagens de sucesso
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     // FUNÇÃO PARA BUSCAR DETALHES DA ADESÃO NO BACKEND
     const loadData = useCallback(async () => {
@@ -58,6 +63,7 @@ const ActivityPage: React.FC = () => {
 
         setLoading(true);
         setError(null);
+        setSuccessMessage(null);
         
         try {
             const response = await fetch(`${API_PRIVATE_URL}/rotinas/adesao/${adesaoId}`, {
@@ -70,16 +76,15 @@ const ActivityPage: React.FC = () => {
             const result = await response.json();
 
             if (response.ok) {
-                // Mapeamento dos dados do backend para o formato do frontend (ActivityData)
                 const mappedData: ActivityData = {
                     adesaoId: result.adesaoId,
                     title: result.nome,
                     unit: result.unidade,
                     goal: result.meta,
-                    current: result.current, // Valor atual de consumo no dia (supondo que o backend calcula)
-                    addButtons: result.addButtons || [50, 100, 250], // Simulação de botões de consumo rápido
-                    registrosDia: result.registrosDia || [], // Mock de histórico do dia
-                    historicoMetas: result.historicoMetas || [], // Mock de histórico de metas
+                    current: result.current, 
+                    addButtons: result.addButtons || [100, 200, 300], 
+                    registrosDia: result.registrosDia || [], 
+                    historicoMetas: result.historicoMetas || [], 
                 };
                 
                 setData(mappedData);
@@ -107,10 +112,8 @@ const ActivityPage: React.FC = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        // Não recarregamos loadData aqui, pois handleSaveGoal faz isso no sucesso
     };
     
-    // LÓGICA DE API: Salva a nova meta no backend
     const handleSaveGoal = async (newGoal: number) => {
         if (!data || !token) return;
         
@@ -127,7 +130,6 @@ const ActivityPage: React.FC = () => {
             const result = await response.json();
             
             if (response.ok) {
-                // Atualiza localmente e recarrega os dados para pegar o novo 'current' (provavelmente 0)
                 setSuccessMessage("Meta atualizada com sucesso!");
                 loadData(); 
             } else {
@@ -142,7 +144,6 @@ const ActivityPage: React.FC = () => {
     const handleAddConsumption = (amount: number) => {
         if (!data) return;
         setUndoStack(prevStack => [...prevStack, displayCurrent]);
-        // Permite ir além da meta, mas a barra de progresso só mostra até 100%
         setDisplayCurrent(prev => prev + amount); 
     };
 
@@ -162,14 +163,24 @@ const ActivityPage: React.FC = () => {
         setUndoStack(newStack);
     };
     
-    // LÓGICA DE API: Salva o progresso atual no backend
+    // LÓGICA DE API: Salva o DELTA (Diferença) como um novo registro
     const handleSaveChanges = async () => {
         if (!data || !token || !adesaoId) return;
         
         setError(null);
         setSuccessMessage(null);
         
+        // 1. Calcular o DELTA (a diferença que o usuário quer registrar)
+        const deltaConsumido = displayCurrent - data.current; 
+
+        // 2. Verificar se houve alteração antes de salvar
+        if (deltaConsumido === 0) {
+            setSuccessMessage("Nenhuma alteração a ser salva.");
+            return;
+        }
+
         try {
+            // Envia o deltaConsumido, que será o valorRegistro no backend
             const response = await fetch(`${API_PRIVATE_URL}/registros/registrar`, {
                 method: 'POST',
                 headers: {
@@ -178,16 +189,16 @@ const ActivityPage: React.FC = () => {
                 },
                 body: JSON.stringify({ 
                     adesaoId: parseInt(adesaoId),
-                    valorConsumido: displayCurrent, // O valor total do dia
+                    valorConsumido: deltaConsumido, // Envia o DELTA
                 })
             });
 
             const result = await response.json();
             
             if (response.ok) {
-                // Sucesso: Atualiza o estado da aplicação e recarrega para sincronizar
-                setSuccessMessage("Progresso salvo com sucesso!");
-                loadData(); // Recarrega os dados para resetar o undoStack e atualizar o histórico
+                // Sucesso: Recarrega os dados para que 'data.current' seja sincronizado
+                setSuccessMessage("Registro de consumo adicionado com sucesso!");
+                loadData(); 
             } else {
                 setError(result.message || "Erro ao salvar o progresso.");
             }
@@ -204,13 +215,13 @@ const ActivityPage: React.FC = () => {
                 <main className="dashboard-main-content">
                     <div className="hydration-header">
                         <h2>Carregando detalhes da rotina...</h2>
+                        <p>ID da Adesão: {adesaoId}</p>
                     </div>
                 </main>
             </div>
         );
     }
     
-    // Se o carregamento terminou e deu erro ou não há dados
     if (error || !data) {
         return (
             <div className="dashboard-layout">
@@ -218,7 +229,7 @@ const ActivityPage: React.FC = () => {
                 <Sidebar />
                 <main className="dashboard-main-content">
                     <div className="hydration-header">
-                        <h2 className='text-red-500'>Erro ao carregar Rotina</h2>
+                        <h2 style={{ color: 'red' }}>Erro ao carregar Rotina</h2>
                         <p>{error}</p>
                     </div>
                 </main>
@@ -226,18 +237,15 @@ const ActivityPage: React.FC = () => {
         );
     }
 
-    // Usando as propriedades do objeto 'data'
     const { title, unit, goal, addButtons, registrosDia, historicoMetas } = data;
-    const isChanged = data.current !== displayCurrent;
-    const Icon = getIcon(title); // Obtém o ícone dinamicamente pelo nome da rotina
+    const hasPendingChanges = displayCurrent !== data.current; 
+    const Icon = getIcon(title); 
 
     const percentage = goal > 0 ? Math.round((displayCurrent / goal) * 100) : 0;
     const circumference = 314; 
-    // Garante que o progresso não vá além de 100% no visual
     const visualPercentage = Math.min(percentage, 100); 
     const progressOffset = circumference * (1 - (visualPercentage / 100));
 
-    // Obtendo o ícone correto para o botão de consumo
     const ConsumptionIcon = Icon;
 
     return (
@@ -295,7 +303,7 @@ const ActivityPage: React.FC = () => {
                             <button 
                                 className="button-base button-secondary-bg save-progress-btn"
                                 onClick={handleSaveChanges}
-                                disabled={!isChanged}
+                                disabled={!hasPendingChanges} // Desabilita se não houver delta
                             >
                                 <Save size={16} /> Salvar Alteração
                             </button>
@@ -307,6 +315,7 @@ const ActivityPage: React.FC = () => {
                     <div className="hydration-actions">
                         <h3>Adicionar consumo:</h3>
                         <div className="consumption-buttons">
+                            {/* BOTÕES DINÂMICOS */}
                             {addButtons.map((value) => (
                                 <button 
                                     key={value} 
@@ -327,6 +336,7 @@ const ActivityPage: React.FC = () => {
 
                         <h3>Remover consumo:</h3>
                         <div className="consumption-buttons">
+                            {/* BOTÕES DINÂMICOS */}
                             {addButtons.map((value) => (
                                 <button 
                                     key={value} 
@@ -339,7 +349,6 @@ const ActivityPage: React.FC = () => {
                         </div>
 
                         <h3>Histórico:</h3>
-                        {/* Conteúdo de Histórico (AGORA VINCULADO AO MOCK QUE VIRÁ DO BACKEND) */}
                         <div className="history-grid">
                             
                             <div className="history-column">
@@ -347,12 +356,14 @@ const ActivityPage: React.FC = () => {
                                 {registrosDia.length === 0 ? (
                                     <p className='text-sm opacity-60'>Nenhum registro hoje.</p>
                                 ) : (
+                                    // Renderiza o histórico de registros individuais
                                     registrosDia.map((item, index) => (
                                         <div 
-                                            key={item.time + index} 
+                                            key={item.time + item.value + index} 
                                             className="history-item"
                                         >
-                                            <Clock size={18} /> {item.time} - {item.value} {unit}
+                                            {/* Formata o valor para mostrar + ou - */}
+                                            <Clock size={18} /> {item.time} - {item.value > 0 ? `+${item.value}` : item.value} {unit}
                                         </div>
                                     ))
                                 )}
@@ -361,18 +372,19 @@ const ActivityPage: React.FC = () => {
                             <div className="history-column">
                                 <h4 className='text-sm font-semibold opacity-70 mb-2'>Metas Anteriores</h4>
                                 {historicoMetas.length === 0 ? (
-                                    <p className='text-sm opacity-60'>Nenhum histórico.</p>
+                                    <p className='text-sm opacity-60'>Nenhum histórico anterior à adesão.</p>
                                 ) : (
                                     historicoMetas.map((item) => (
                                         <div key={item.date} className="history-item">
-                                            {item.percentage >= 100 ? (
-                                                <CalendarCheck size={18} className='text-green-600'/>
+                                            {/* ⬅️ CORREÇÃO: Renderiza status e ícone baseado em isComplete */}
+                                            {item.isComplete ? (
+                                                <CalendarCheck size={18} style={{ color: 'var(--color-secondary-button)' }}/>
                                             ) : (
-                                                <CalendarX size={18} className='text-red-600'/>
+                                                <CalendarX size={18} style={{ color: '#dc2626' }}/>
                                             )}
                                             {item.date} 
-                                            <span className="percentage">
-                                                {item.percentage}%
+                                            <span className={`percentage ${item.isComplete ? 'text-green-500' : 'text-red-500'}`}>
+                                                {item.status}
                                             </span>
                                         </div>
                                     ))
@@ -383,7 +395,7 @@ const ActivityPage: React.FC = () => {
                 </div>
             </main>
 
-            {isModalOpen && (
+            {isModalOpen && data && (
                 <EditGoalModal
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}

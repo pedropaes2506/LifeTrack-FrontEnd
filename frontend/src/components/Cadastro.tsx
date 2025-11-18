@@ -136,7 +136,7 @@ const CadastroPage = () => {
                                 <label htmlFor="password">Senha</label>
                             </div>
 
-                            {/* Sexo */}
+                            {/* Sexo - CORRIGIDO para enviar M, F, O */}
                             <div className="input-group">
                                 <select 
                                     id="sexo" 
@@ -145,9 +145,9 @@ const CadastroPage = () => {
                                     onChange={handleChange}
                                 >
                                     <option value="" disabled>Selecione</option>
-                                    <option value="masculino">Masculino</option>
-                                    <option value="feminino">Feminino</option>
-                                    <option value="outro">Outro</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                    <option value="O">Outro</option>
                                 </select>
                                 <label htmlFor="sexo">Sexo</label>
                             </div>

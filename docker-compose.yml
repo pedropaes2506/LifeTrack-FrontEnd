@@ -1,0 +1,58 @@
+services:
+  # 1. SERVIÇO DE FRONTEND
+  frontend:
+    # O contexto de build é a pasta 'frontend'
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lifetrack-frontend
+    ports:
+      # Exponha o frontend na porta 80 (padrão Nginx)
+      - "80:80" 
+    environment:
+      # Variável de ambiente usada pelo código do frontend para chamar o backend
+      # O host é o nome do serviço 'app' e a porta é a interna 3000
+      VITE_API_BASE_URL: "http://localhost:3000"
+    depends_on:
+      - app
+      
+  # 2. SERVIÇO DE BACKEND
+  app:
+    image: node:22
+    platform: linux/arm64 
+    # O diretório de trabalho agora é o '/app' dentro do container
+    working_dir: /app
+    volumes:
+      # Monta a pasta 'backend' do host na pasta '/app' do container
+      - ./backend:/app 
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      # ... Suas variáveis de ambiente
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: lifetrack
+      DATABASE_URL: "mysql://root:root@db:3306/lifetrack"
+    # Adicione o comando para iniciar o servidor Node após instalar dependências
+    # Você pode querer substituir "tail -f /dev/null" por "npm start" ou similar
+    command: sh -c "npm install && npm start && npx prisma generate && tsx watch server.js"
+    
+  # 3. SERVIÇO DE BANCO DE DADOS
+  db:
+    image: mysql:8.0
+    restart: always
+    container_name: lifetrack-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lifetrack
+    ports:
+      - "3307:3306" 
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
