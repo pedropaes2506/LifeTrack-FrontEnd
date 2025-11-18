@@ -1,9 +1,6 @@
-/* Estilos para: src/styles/AboutPage.css */
-
 .about-page-container {
   width: 100%;
-  max-width: 800px; /* Limita a largura do texto para melhor legibilidade */
-  /* 🚀 FIX CRÍTICO: Adiciona o offset da Sidebar (100px) + padding interno (40px) */
+  max-width: 800px; 
   padding-left: 180px; 
 }
 
@@ -12,11 +9,9 @@
   color: #333;
   font-size: 2rem;
   margin-bottom: 2rem;
-  /* 🚀 FIX: Adiciona padding superior para não colar no topo */
   padding-top: 2rem; 
 }
 
-/* Títulos das seções (ex: "Nossa Missão") */
 .about-subtitle {
   color: var(--color-primary-dark, #3a336f);
   font-size: 1.5rem;
@@ -25,7 +20,6 @@
   margin-bottom: 1rem;
 }
 
-/* Parágrafos de texto */
 .about-text {
   color: var(--color-text-dark, #333);
   font-size: 1rem;
@@ -33,14 +27,12 @@
   opacity: 0.9;
 }
 
-/* Rodapé da página (onde fica o botão) */
 .about-page-footer {
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid #e0e0e0;
 }
 
-/* Botão de Suporte (baseado nos botões roxos) */
 .btn-support {
   background-color: var(--color-primary-dark, #3a336f);
   color: var(--color-text-light, #fff);
@@ -50,7 +42,6 @@
   cursor: pointer;
   transition: background-color 0.2s;
   
-  /* ESTILOS DE LAYOUT */
   display: flex; 
   flex-direction: column; 
   align-items: flex-start; 
@@ -64,14 +55,12 @@
   background-color: #2b2554;
 }
 
-/* Estilo para o texto principal do botão */
 .btn-support-main-text {
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.4; 
 }
 
-/* Texto menor dentro do botão */
 .btn-support span {
   font-size: 0.85rem;
   font-weight: 400;

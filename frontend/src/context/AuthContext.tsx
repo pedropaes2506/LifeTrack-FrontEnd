@@ -1,5 +1,3 @@
-// src/context/AuthContext.tsx
-
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,20 +9,19 @@ interface User {
   nivelAcesso: 'USER' | 'ADMIN' | 'MODERATOR';
 }
 
-// 🚀 ALTERAÇÃO 1: Adicionar a função updateUserName à interface
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (token: string, user: User) => void;
   logout: () => void;
   isAuthenticated: boolean;
-  updateUserName: (newName: string) => void; // ⬅️ FUNÇÃO NOVA
+  updateUserName: (newName: string) => void;
 }
 
-// Valor padrão do contexto (atualizado para incluir a nova função)
+// Valor padrão do contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// URL Base da API (ajuste conforme a sua configuração)
+// URL Base da API
 const API_BASE_URL = 'http://localhost:3000/api/public'; 
 
 interface AuthProviderProps {
@@ -44,7 +41,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const parsedUser: User = JSON.parse(storedUser);
         
-        // 🚀 VERIFICAÇÃO ADICIONADA AQUI
         // Verifica se o campo nivelAcesso existe e se é um valor esperado
         const validNiveis = ['USER', 'ADMIN', 'MODERATOR'];
         if (!parsedUser.nivelAcesso || !validNiveis.includes(parsedUser.nivelAcesso)) {
@@ -57,12 +53,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch (error) {
         console.error("Erro ao restaurar sessão ou dados inválidos:", error);
         
-        // ⚠️ Limpa o localStorage para forçar um novo login.
+        // Limpa o localStorage para forçar um novo login.
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        
-        // Opcional: Redireciona para o login para uma experiência mais limpa.
-        // navigate('/login'); 
       }
     }
   }, []);
@@ -74,7 +67,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(newUser));
   };
   
-  // 🚀 ALTERAÇÃO 2: Implementação da função de atualização do nome
   const updateUserName = (newName: string) => {
       setUser(prevUser => {
           if (prevUser) {
@@ -98,7 +90,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isAuthenticated = !!token;
 
   return (
-    // 🚀 ALTERAÇÃO 3: Fornecer a nova função updateUserName no Provider
     <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated, updateUserName }}>
       {children}
     </AuthContext.Provider>

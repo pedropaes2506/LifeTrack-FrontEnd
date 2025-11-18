@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard';
 import Cadastro from './components/Cadastro';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
 import EmailSentPage from './components/EmailSentPage';
-import ActivityPage from './components/ActivityPage'; // Componente de rotina migrado
+import ActivityPage from './components/ActivityPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import CalendarPage from './components/CalendarPage';
 import OfensivaPage from './components/OfensivaPage';
@@ -16,10 +16,8 @@ import AboutPage from './components/AboutPage';
 import SupportPage from './components/SupportPage';
 import HabitsManageAdmin from './components/HabitsManageAdmin';
 
-// Componente Wrapper para proteger rotas privadas
 const PrivateRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
     const { isAuthenticated } = useAuth();
-    // Se não estiver autenticado, redireciona para o login
     return isAuthenticated ? <>{element}</> : <Navigate to="/login" replace />;
 };
 

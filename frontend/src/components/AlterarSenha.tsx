@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; // ⬅️ Importar AuthContext
+import { useAuth, API_BASE_URL } from '../context/AuthContext';
 import '../styles/App.css';
 import '../styles/AlterarSenha.css';
 

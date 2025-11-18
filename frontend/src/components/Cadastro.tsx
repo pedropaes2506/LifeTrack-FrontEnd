@@ -4,7 +4,6 @@ import Header from './Header';
 import { API_BASE_URL } from '../context/AuthContext';
 import '../styles/App.css'; 
 import '../styles/Cadastro.css'; 
-// Foi necessário mudar o nome do arquivo para .tsx e adicionar tipagem.
 
 const CadastroPage = () => {
     const navigate = useNavigate();

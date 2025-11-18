@@ -177,14 +177,9 @@
 
 .calendar-day-selected {
     border: 2px solid #5d57a6 !important;
-    /* Cor roxa do seu tema */
     background-color: #f1effe !important;
-    /* Fundo muito claro */
     color: #4a3c6f !important;
 }
-
-/* O resto do CSS para .calendar-summary-card, .calendar-summary-header, etc., deve permanecer o mesmo
-   para que o card roxo tenha o estilo correto. */
 
 .calendar-stat-item span.progress-value {
     font-weight: bold;

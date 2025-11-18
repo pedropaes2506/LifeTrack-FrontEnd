@@ -1,4 +1,4 @@
-import cors from 'cors'; // Importar CORS
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
@@ -6,9 +6,9 @@ import { fileURLToPath } from 'url';
 
 import privateRoutes from './routes/private.js';
 import publicRoutes from './routes/public.js';
-import adminRoutes from './routes/admin.js'; // ⬅️ NOVO: Rotas de Admin
+import adminRoutes from './routes/admin.js';
 import esqueciSenhaRoute from './routes/senha.js';
-import { autenticarToken, autorizarNivelAcesso } from './middleware.js'; // ⬅️ ATUALIZADO: Importar autorização
+import { autenticarToken, autorizarNivelAcesso } from './middleware.js';
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ app.use('/api/public', esqueciSenhaRoute);
 app.use('/api/private', autenticarToken, privateRoutes); 
 
 // Rotas administrativas (Requer autenticação e nível de acesso checado dentro de admin.js)
-app.use('/api/admin', adminRoutes); // ⬅️ NOVO ENDPOINT DE ADMIN
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 3000;
 

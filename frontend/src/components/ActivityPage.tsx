@@ -315,7 +315,6 @@ const ActivityPage: React.FC = () => {
                     <div className="hydration-actions">
                         <h3>Adicionar consumo:</h3>
                         <div className="consumption-buttons">
-                            {/* BOTÕES DINÂMICOS */}
                             {addButtons.map((value) => (
                                 <button 
                                     key={value} 
@@ -336,7 +335,6 @@ const ActivityPage: React.FC = () => {
 
                         <h3>Remover consumo:</h3>
                         <div className="consumption-buttons">
-                            {/* BOTÕES DINÂMICOS */}
                             {addButtons.map((value) => (
                                 <button 
                                     key={value} 
@@ -376,7 +374,6 @@ const ActivityPage: React.FC = () => {
                                 ) : (
                                     historicoMetas.map((item) => (
                                         <div key={item.date} className="history-item">
-                                            {/* ⬅️ CORREÇÃO: Renderiza status e ícone baseado em isComplete */}
                                             {item.isComplete ? (
                                                 <CalendarCheck size={18} style={{ color: 'var(--color-secondary-button)' }}/>
                                             ) : (

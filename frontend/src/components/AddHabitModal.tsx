@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth, API_BASE_URL } from '../context/AuthContext'; 
 import '../styles/App.css'; 
-// ⬅️ Importa o novo CSS
 import '../styles/AddHabitModal.css'; 
 
 interface RotinaDisponivel {
@@ -14,7 +13,7 @@ interface RotinaDisponivel {
 interface AddHabitModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onHabitAdded: () => void; // Para forçar o recarregamento do dashboard
+    onHabitAdded: () => void;
 }
 
 // Derivar URL privada da base URL
@@ -149,9 +148,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
     };
 
     return (
-        // ⬅️ Utiliza a classe do backdrop do novo CSS e a função de fechar
         <div className="add-modal-backdrop" onClick={onClose}>
-            {/* ⬅️ Utiliza a classe do conteúdo e impede a propagação do clique */}
             <div className="add-modal-content" onClick={(e) => e.stopPropagation()}>
                 <h3 className="mb-6 text-center">Adicionar Hábito(s):</h3>
 
@@ -185,7 +182,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
                 <div className="add-modal-actions">
                     <button 
                         onClick={onClose} 
-                        // Usa a classe do App.css
                         className="button-base button-secondary-bg"
                         disabled={loading}
                     >
@@ -193,7 +189,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onHabitA
                     </button>
                     <button 
                         onClick={handleSalvar}
-                        // Usa a classe do App.css
                         className="button-base button-secondary-bg"
                         disabled={loading || selectedRotinas.length === 0}
                     >

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header'; 
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; // Importando useAuth e API_BASE_URL
+import { useAuth, API_BASE_URL } from '../context/AuthContext';
 import '../styles/App.css'; 
 import '../styles/Login.css'; 
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    // Use 'login' aqui
     const { login } = useAuth(); 
     
     const [email, setEmail] = useState('');
@@ -32,15 +31,13 @@ const LoginPage = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // 🔑 CORREÇÃO CRÍTICA: Capturar nivelAcesso e incluí-lo no objeto de usuário
                 const user = { 
                     id: data.id, 
                     email: data.email, 
                     nome: data.nome,
-                    nivelAcesso: data.nivelAcesso // ⬅️ CAMPO ADICIONADO AQUI
+                    nivelAcesso: data.nivelAcesso
                 }; 
                 
-                // O 'as any' é necessário porque o tipo 'User' no contexto foi atualizado
                 login(data.token, user as any); 
                 setMessage('Login realizado com sucesso! Redirecionando...');
                 

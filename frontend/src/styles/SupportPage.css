@@ -1,12 +1,9 @@
-/* Estilos para: src/styles/SupportPage.css */
-
 .support-page-container {
   width: 100%;
   max-width: 900px; 
-  /* 🚀 FIX CRÍTICO: Offset da Sidebar (100px) + Padding interno (40px) */
   padding-left: 180px; 
   padding-right: 2rem;
-  padding-top: 2rem; /* Adicionar padding superior padrão para consistência */
+  padding-top: 2rem; 
 }
 
 .support-page-header h1 {
@@ -16,7 +13,6 @@
   margin-bottom: 3rem;
 }
 
-/* --- Títulos das Seções --- */
 .section-title {
   color: var(--color-primary-dark, #3a336f);
   font-size: 1.5rem;
@@ -27,13 +23,11 @@
   padding-bottom: 0.25rem;
 }
 
-/* --- Seção de FAQ --- */
 .faq-section {
   margin-bottom: 4rem;
 }
 
 .faq-group {
-    /* Container para o item de pergunta e resposta */
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -56,7 +50,6 @@
   font-weight: 500;
 }
 
-/* Estilo para o ícone de seta (para apontar para cima ou baixo) */
 .arrow-icon {
     color: var(--color-primary-dark, #3a336f);
     transform: rotate(0deg); 
@@ -67,31 +60,28 @@
 }
 
 
-/* --- NOVO: Estilo da Resposta (Tutorial) --- */
 .faq-answer {
-    /* Aumenta o padding e remove o padding da esquerda para centralizar a lista */
     padding: 0.5rem 2rem 1.5rem 1rem; 
-    background-color: #fcfcfc; /* Fundo levemente diferente para destacar */
+    background-color: #fcfcfc; 
     color: #555;
     font-size: 0.95rem;
     line-height: 1.5;
-    border-left: 3px solid var(--color-secondary-button, #5d57a6); /* Barra lateral roxa */
+    border-left: 3px solid var(--color-secondary-button, #5d57a6); 
     margin-bottom: 0.5rem;
 }
 
 .faq-answer ul {
-    list-style: none; /* Remove bolinhas/números padrão */
-    padding-left: 0; /* Remove o padding padrão da lista */
+    list-style: none; 
+    padding-left: 0; 
     margin-top: 10px;
 }
 
 .faq-answer li {
-    margin-bottom: 12px; /* Aumenta o espaçamento entre os passos */
+    margin-bottom: 12px; 
     padding-left: 10px;
 }
 
 
-/* --- Seção de Contato (abaixo...) --- */
 .contact-section {
   margin-top: 2rem;
 }
@@ -133,7 +123,6 @@
   resize: vertical;
 }
 
-/* Botão Enviar Mensagem (Roxo) */
 .btn-send-message {
   background-color: var(--color-primary-dark, #3a336f);
   color: var(--color-text-light, #fff);

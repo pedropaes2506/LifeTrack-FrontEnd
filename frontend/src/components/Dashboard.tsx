@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import HabitCard from './HabitCard';
-import AddHabitModal from './AddHabitModal'; // Importa o modal de adição
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; // ⬅️ CORREÇÃO: Importar API_BASE_URL
-import { getIcon } from '../utils/icons'; // Importa a função de mapeamento de ícones
+import AddHabitModal from './AddHabitModal';
+import { useAuth, API_BASE_URL } from '../context/AuthContext';
+import { getIcon } from '../utils/icons';
 import '../styles/App.css';
 import '../styles/Dashboard.css'; 
 import { Plus, LogOut } from 'lucide-react'; 
@@ -20,7 +20,6 @@ interface MinhaRotina {
     streak: number;  // Contagem de dias consecutivos (simulado por enquanto)
 }
 
-// ⬅️ CORREÇÃO: Derivar URL privada da base URL
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private'); 
 
 const DashboardPage: React.FC = () => {
@@ -36,7 +35,6 @@ const DashboardPage: React.FC = () => {
         setLoading(true);
         try {
             // Chamada API para buscar rotinas do usuário
-            // ⬅️ CORREÇÃO: Usar a URL privada construída
             const response = await fetch(`${API_PRIVATE_URL}/rotinas/minhas`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,

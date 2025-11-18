@@ -10,7 +10,6 @@ import '../styles/CalendarPage.css';
 
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private');
 
-// --- NOVOS TIPOS DE DADOS ---
 interface MonthlySummary {
     [dateKey: string]: { // Chave: 'YYYY-MM-DD'
         status: 'vermelho' | 'amarelo' | 'verde' | 'none';
@@ -34,9 +33,7 @@ interface CalendarDay {
     isCurrentMonth: boolean;
     isToday: boolean;
 }
-// --- FIM NOVOS TIPOS DE DADOS ---
 
-// --- FUNÇÕES UTILITY ---
 const getDaysInMonth = (date: Date): CalendarDay[] => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -101,10 +98,8 @@ const formatDateToISO = (date: Date): string => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
-// --- FIM FUNÇÕES UTILITY ---
 
 
-// --- COMPONENTE DE DETALHE DINÂMICO ---
 const DailyProgressDetail: React.FC<{ details: DailyDetail | null }> = ({ details }) => {
     
     // 1. Se não houver dados (estado inicial ou antes da seleção)
@@ -152,7 +147,6 @@ const DailyProgressDetail: React.FC<{ details: DailyDetail | null }> = ({ detail
     );
 };
 
-// --- COMPONENTE PRINCIPAL ---
 const CalendarPage: React.FC = () => {
     const { token } = useAuth();
     const today = new Date();
@@ -175,7 +169,6 @@ const CalendarPage: React.FC = () => {
     const monthYearString = dataAtual.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
     const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
     
-    // --- FUNÇÃO DE BUSCA DE DADOS MENSAIS (ROTA A) ---
     const fetchMonthlySummary = useCallback(async () => {
         if (!token) return;
         setLoadingMonthly(true);
@@ -203,7 +196,6 @@ const CalendarPage: React.FC = () => {
         }
     }, [dataAtual, token]);
 
-    // --- FUNÇÃO DE BUSCA DE DETALHES DIÁRIOS (ROTA B) ---
     const fetchDailyDetail = useCallback(async (date: Date) => {
         if (!token) return;
         setLoadingDaily(true);
@@ -244,7 +236,6 @@ const CalendarPage: React.FC = () => {
     }, [selectedDate, fetchDailyDetail]);
 
 
-    // --- HANDLERS DE NAVEGAÇÃO ---
     const handleMonthChange = (offset: number) => {
         setDataAtual(prevDate => {
             const newDate = new Date(prevDate);
@@ -262,7 +253,6 @@ const CalendarPage: React.FC = () => {
         // O useEffect tratará a chamada a fetchDailyDetail
     };
 
-    // --- LÓGICA DE CLASSE DOS DIAS (COR E SELEÇÃO) ---
     const getDayClassName = (day: CalendarDay) => {
         let classNames = ['cal-day']; 
         

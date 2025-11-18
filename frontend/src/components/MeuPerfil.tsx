@@ -10,7 +10,7 @@ const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private');
 interface UserProfile {
     nomeCompleto: string;
     email: string;
-    sexo: string; // 'M', 'F', 'O' ou ''
+    sexo: string;
     dataNascimento: string; // Formato YYYY-MM-DD
 }
 
@@ -45,7 +45,6 @@ const MeuPerfil: React.FC = () => {
                 setDadosUsuario({
                     nomeCompleto: data.nomeCompleto || '',
                     email: data.email || '',
-                    // O backend retorna 'M', 'F', 'O' ou '' (string vazia)
                     sexo: data.sexo || '', 
                     dataNascimento: data.dataNascimento || '' 
                 });
@@ -165,7 +164,6 @@ const MeuPerfil: React.FC = () => {
                                     />
                                 </div>
 
-                                {/* SEXO (COM OPÇÕES CORRIGIDAS) */}
                                 <div className="campo-perfil">
                                     <label htmlFor="sexo">Sexo</label>
                                     <select

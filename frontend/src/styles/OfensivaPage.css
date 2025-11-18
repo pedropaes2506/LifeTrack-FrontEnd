@@ -93,10 +93,8 @@
   font-size: 1.5rem;
 }
 
-/* Botões de navegação (< e >) */
 .ofensiva-nav-button {
   background: #4a3c6f;
-  /* Roxo */
   border: none;
   border-radius: 8px;
   width: 40px;
@@ -142,26 +140,20 @@
   background: #f0f0f0;
 }
 
-/* Estilos de destaque dos dias */
 .ofensiva-day-other-month {
   color: #bbb;
   background: #fff;
 }
 
-/* Destaque AZUL para dias de ofensiva */
 .ofensiva-day-highlight-blue {
   background-color: #e0f2f7;
-  /* Azul claro */
   color: #0288d1;
-  /* Azul mais escuro */
 }
 
-/* Dia "de hoje" (com destaque azul + borda) */
 .ofensiva-day-today {
   background-color: #e0f2f7;
   color: #0288d1;
   border: 2px solid #0277bd;
-  /* Borda azul */
   padding: calc(0.8rem - 2px);
   border-radius: 6px;
 }
