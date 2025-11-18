@@ -1,0 +1,171 @@
+.alterar-senha-page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+    width: 100%;
+    background-color: var(--color-background-light); 
+    overflow-y: hidden;
+}
+
+.alterar-senha-main-content {
+    padding-left: 100px; 
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--color-text-dark);
+}
+
+.alterar-senha-card-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.alterar-senha-headline {
+    flex: 1;
+    padding-left: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.alterar-senha-headline h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.alterar-senha-headline p {
+    font-size: 1.25rem;
+    opacity: 0.8;
+}
+
+.alterar-senha-card {
+    background-color: var(--color-secondary-button);
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 450px;
+}
+
+.alterar-senha-card form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.alterar-senha-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.alterar-senha-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-light);
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.75rem;
+}
+
+.input-group label {
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    color: var(--color-text-dark);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--color-text-light);
+    color: var(--color-text-dark);
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    box-shadow: 0 0 0 3px var(--color-primary-dark);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    transform: translateY(-1.85rem) scale(0.9);
+    left: 0.1rem;
+    color: var(--color-text-light);
+}
+
+.alterar-senha-button {
+    margin-top: 1rem;
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.9rem 1.5rem;
+}
+
+.password-requirements {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    opacity: 0.8;
+}
+
+.password-requirements ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.password-requirements li {
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 900px) {
+    .alterar-senha-main-content {
+        flex-direction: column-reverse;
+        padding: 2rem;
+    }
+    
+    .alterar-senha-headline {
+        padding-left: 0;
+        margin-bottom: 3rem;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+    }
+
+    .alterar-senha-headline h1 {
+        font-size: 2rem;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .alterar-senha-card-area {
+        width: 100%;
+    }
+
+    .alterar-senha-card {
+        padding: 2rem;
+    }
+}

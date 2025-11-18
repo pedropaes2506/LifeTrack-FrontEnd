@@ -1,0 +1,159 @@
+.calculadora-container {
+    padding: 2rem;
+    margin-left: 100px;
+    display: flex;
+    gap: 7rem;
+    align-items: flex-start;
+}
+
+.coluna-esquerda {
+    flex: 1;
+    max-width: 600px;
+    
+}
+
+.coluna-direita {
+    flex: 1;
+    max-width: 500px;
+    position: relative;
+    
+}
+
+.coluna-direita::before {
+    content: "";
+    position: absolute;
+    left: -1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: #8686868a;
+    
+}
+
+.titulo-principal {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3a336f;
+    margin-bottom: 2rem;
+}
+
+.formulario-imc {
+    background: #5d57a6;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.campo-form {
+    margin-bottom: 1.5rem;
+}
+
+.campo-form label {
+    display: block;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.campo-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.botao-calcular {
+    width: 100%;
+    padding: 0.75rem;
+    background: #3a336f;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.resultados-imc {
+    background: #5d57a6;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    color: white;
+}
+
+.resultados-imc h2 {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.item-resultado {
+    margin-bottom: 0.5rem;
+}
+
+.item-resultado strong {
+    display: block;
+}
+
+.hidratacao-texto {
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.informacoes-imc h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.texto-info {
+    color: #333;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.informacoes-imc h4 {
+    color: #333;
+    margin: 1.5rem 0 1rem 0;
+    font-size: 1.1rem;
+}
+
+.lista-classificacao {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.lista-classificacao li {
+    color: #333;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.lista-classificacao li::before {
+    content: "*";
+    position: absolute;
+    left: 0;
+    color: #3a336f;
+    font-weight: bold;
+}
+
+@media (max-width: 900px) {
+    .calculadora-container {
+        flex-direction: column;
+        margin-left: 0;
+        padding: 1rem;
+        gap: 2rem;
+    }
+    
+    .coluna-esquerda,
+    .coluna-direita {
+        max-width: 100%;
+    }
+
+    .coluna-direita::before {
+        display: none;
+    }
+}
