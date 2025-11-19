@@ -85,10 +85,10 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: "Senha inválida." });
         }
 
-        // ⬅️ CORREÇÃO CRÍTICA: INJETAR O ID DO USUÁRIO NO PAYLOAD DO JWT
+        // INJETAR O ID DO USUÁRIO NO PAYLOAD DO JWT
         const token = jwt.sign(
           { 
-            id: user.id, // ✅ ID ADICIONADO AQUI
+            id: user.id, 
             email: user.email, 
             nivelAcesso: user.nivelAcesso 
           }, 

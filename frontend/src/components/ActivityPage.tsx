@@ -28,9 +28,9 @@ interface ActivityData {
     title: string;
     unit: string;
     goal: number;
-    current: number; // Progresso TOTAL do dia (Soma de todos os deltas)
+    current: number;
     addButtons: number[];
-    registrosDia: { time: string; value: number }[]; // Lista de deltas individuais
+    registrosDia: { time: string; value: number }[];
     historicoMetas: MetaHistoryItem[]; 
 }
 
@@ -297,7 +297,7 @@ const ActivityPage: React.FC = () => {
                             <button 
                                 className="button-base button-secondary-bg save-progress-btn"
                                 onClick={handleSaveChanges}
-                                disabled={!hasPendingChanges} // Desabilita se não houver delta
+                                disabled={!hasPendingChanges} 
                             >
                                 <Save size={16} /> Salvar Alteração
                             </button>

@@ -5,7 +5,7 @@ import Dashboard from './components/Dashboard';
 import Cadastro from './components/Cadastro';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
 import EmailSentPage from './components/EmailSentPage';
-import ActivityPage from './components/ActivityPage'; // Componente de rotina migrado
+import ActivityPage from './components/ActivityPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import CalendarPage from './components/CalendarPage';
 import OfensivaPage from './components/OfensivaPage';

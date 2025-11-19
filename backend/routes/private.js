@@ -2,12 +2,12 @@ import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import { autenticarToken } from '../middleware.js'; 
 import bcrypt from 'bcrypt'; 
-import { enviarEmail } from './mail.js'; // ⬅️ IMPORTAÇÃO DA FUNÇÃO ENVIAR EMAIL
+import { enviarEmail } from './mail.js'; //  IMPORTAÇÃO DA FUNÇÃO ENVIAR EMAIL
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// Função para Mapear Unidade -> Botões de Consumo Rápido
+
 function getAddButtons(tipoUnidade) {
     const unit = tipoUnidade ? tipoUnidade.toLowerCase() : '';
     
@@ -29,7 +29,6 @@ function getAddButtons(tipoUnidade) {
     }
 }
 
-// ⬅️ FUNÇÃO EXISTENTE: Garante que o dia anterior foi "fechado"
 async function ensureDayClosure(prismaInstance, adesaoId, rotinaMeta) {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0); 
@@ -106,8 +105,6 @@ async function ensureDayClosure(prismaInstance, adesaoId, rotinaMeta) {
     }
 }
 
-
-// ⬅️ FUNÇÃO AUXILIAR: Calcula o status (verde, amarelo, vermelho) de um dia
 async function calculateDailyProgressSummary(prismaInstance, userId, date) {
     const inicioDia = new Date(date);
     inicioDia.setHours(0, 0, 0, 0);
@@ -166,8 +163,6 @@ async function calculateDailyProgressSummary(prismaInstance, userId, date) {
     
     return { status };
 }
-
-// ⬅️ FUNÇÃO PRINCIPAL: CALCULA O STREAK GLOBAL (Inclui 'verde' e 'amarelo')
 async function getGlobalStreakSummary(prismaInstance, userId, targetDate) {
     let currentStreakCount = 0;
     let streakDays = [];
@@ -221,7 +216,7 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
     const hojeFim = new Date(hojeInicio);
     hojeFim.setDate(hojeFim.getDate() + 1); 
     
-    // 1. Buscar TODOS os registros do dia ATUAL
+    // Buscar TODOS os registros do dia ATUAL
     const registrosDiaDB = await prismaInstance.RegistroRotina.findMany({
         where: {
             adesaoId: adesaoId,
@@ -239,7 +234,7 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
         value: reg.valorRegistro,
     }));
     
-    // --- Lógica de Histórico dos Últimos 5 Dias (REAL) ---
+    //  Lógica de Histórico dos Últimos 5 Dias (REAL) ---
     let historicoMetas = [];
     
     const adesaoInfo = await prismaInstance.Adesao.findUnique({
@@ -293,7 +288,7 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
     };
 }
 
-// 🚀 NOVA ROTA: Enviar mensagem de Suporte
+// Enviar mensagem de Suporte
 router.post('/suporte/enviar-mensagem', autenticarToken, async (req, res) => {
     const userId = req.user.id;
     const { assunto, mensagem } = req.body;
@@ -342,7 +337,7 @@ router.post('/suporte/enviar-mensagem', autenticarToken, async (req, res) => {
 });
 
 
-// ROTA NOVA: Resumo da Ofensiva Global
+//  Resumo da Ofensiva Global
 router.get('/progress/streak-summary', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const today = new Date();
@@ -358,7 +353,7 @@ router.get('/progress/streak-summary', autenticarToken, async (req, res) => {
 });
 
 
-// ROTA NOVA: Resumo Mensal para Cores do Calendário
+// Resumo Mensal para Cores do Calendário
 router.get('/calendar/monthly-summary', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const { ano, mes } = req.query; 
@@ -401,7 +396,7 @@ router.get('/calendar/monthly-summary', autenticarToken, async (req, res) => {
 });
 
 
-// ROTA NOVA: Detalhes Diários para o Card Lateral
+// Detalhes Diários para o Card Lateral
 router.get('/calendar/daily-detail', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const { data } = req.query; // data: YYYY-MM-DD
@@ -479,7 +474,7 @@ router.get('/calendar/daily-detail', autenticarToken, async (req, res) => {
 });
 
 
-// 🚀 ROTA ATUALIZADA: Buscar Perfil do Usuário Logado
+//  Buscar Perfil do Usuário Logado
 router.get('/perfil', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 
@@ -514,7 +509,7 @@ router.get('/perfil', autenticarToken, async (req, res) => {
     }
 });
 
-// 🚀 ROTA CORRIGIDA: Atualizar Perfil do Usuário Logado (PUT)
+// Atualizar Perfil do Usuário Logado (PUT)
 router.put('/perfil', autenticarToken, async (req, res) => {
     // req.user.id é injetado pelo middleware, garantindo que o usuário só altere o próprio perfil
     const userId = req.user.id; 
@@ -523,17 +518,17 @@ router.put('/perfil', autenticarToken, async (req, res) => {
     try {
         const updatedData = {};
 
-        // 1. Lógica para Nome Completo: Atualiza se não for nulo/vazio
+        //  Lógica para Nome Completo: Atualiza se não for nulo/vazio
         if (nomeCompleto !== undefined && nomeCompleto !== null && nomeCompleto.trim() !== "") {
             updatedData.nome = nomeCompleto.trim();
         }
         
-        // 2. Lógica para Sexo: Se o valor for a string vazia (''), salva NULL no BD
+        //  Lógica para Sexo: Se o valor for a string vazia (''), salva NULL no BD
         if (sexo !== undefined) {
             updatedData.sexo = sexo.trim() === '' ? null : sexo;
         }
 
-        // 3. Lógica para Data de Nascimento:
+        //  Lógica para Data de Nascimento:
         // Se for string vazia, E o campo é NOT NULL, OMITIMOS a chave para PRESERVAR o valor anterior.
         if (dataNascimento !== undefined && dataNascimento.trim() !== "") {
             updatedData.dataNascimento = new Date(dataNascimento);
@@ -560,7 +555,7 @@ router.put('/perfil', autenticarToken, async (req, res) => {
     }
 });
 
-// 🚀 ROTA NOVA: Alterar Senha
+// Alterar Senha
 router.post('/senha/alterar', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -574,7 +569,7 @@ router.post('/senha/alterar', autenticarToken, async (req, res) => {
     }
     
     try {
-        // 1. Buscar a senha atual do usuário (hash)
+        //  Buscar a senha atual do usuário (hash)
         const user = await prisma.User.findUnique({
             where: { id: userId },
             select: { senha: true } 
@@ -584,17 +579,17 @@ router.post('/senha/alterar', autenticarToken, async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        // 2. Comparar a senha atual fornecida com o hash no banco
+        //  Comparar a senha atual fornecida com o hash no banco
         const isCurrentPasswordCorrect = await bcrypt.compare(currentPassword, user.senha);
 
         if (!isCurrentPasswordCorrect) {
             return res.status(401).json({ message: "Senha atual incorreta." });
         }
 
-        // 3. Gerar o hash para a nova senha
+        //  Gerar o hash para a nova senha
         const newPasswordHash = await bcrypt.hash(newPassword, 10);
 
-        // 4. Atualizar a senha no banco de dados
+        //  Atualizar a senha no banco de dados
         await prisma.User.update({
             where: { id: userId },
             data: { senha: newPasswordHash }
@@ -609,7 +604,7 @@ router.post('/senha/alterar', autenticarToken, async (req, res) => {
 });
 
 
-// ROTA NOVA: Listar todas as rotinas mestres disponíveis
+// Listar todas as rotinas mestres disponíveis
 router.get('/rotinas/disponiveis', autenticarToken, async (req, res) => {
     try {
         const rotinas = await prisma.Rotina.findMany({ 
@@ -628,7 +623,7 @@ router.get('/rotinas/disponiveis', autenticarToken, async (req, res) => {
     }
 });
 
-// ROTA NOVA: Obter as rotinas que o usuário já aderiu
+//  Obter as rotinas que o usuário já aderiu
 router.get('/rotinas/minhas', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 
@@ -806,7 +801,7 @@ router.post('/registros/registrar', autenticarToken, async (req, res) => {
         
         const idAdesao = parseInt(adesaoId);
         
-        // 1. Verifica se a adesão pertence ao usuário (segurança)
+        //  Verifica se a adesão pertence ao usuário (segurança)
         const adesao = await prisma.Adesao.findFirst({
             where: { id: idAdesao, usuarioId: user.id },
         });
@@ -815,7 +810,7 @@ router.post('/registros/registrar', autenticarToken, async (req, res) => {
             return res.status(404).json({ message: "Adesão não encontrada." });
         }
         
-        // 2. Sempre cria um NOVO registro com o valor do DELTA
+        //  Sempre cria um NOVO registro com o valor do DELTA
         // Importante: metaCumprida é null para um delta, indicando que não é um registro de fechamento de dia.
         const registro = await prisma.RegistroRotina.create({
             data: {
@@ -835,7 +830,7 @@ router.post('/registros/registrar', autenticarToken, async (req, res) => {
 });
 
 
-// ROTA EXISTENTE: Adesão a uma Rotina
+//  Adesão a uma Rotina
 router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
     try {
         const { rotinaId, metaPessoalValor } = req.body;
@@ -844,7 +839,7 @@ router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
             return res.status(400).json({ message: "ID da rotina e valor da meta são obrigatórios." });
         }
         
-        // 1. Encontrar o ID do usuário logado
+        //  Encontrar o ID do usuário logado
         const user = await prisma.User.findUnique({ 
             where: { email: req.user.email }, 
             select: { id: true } 
@@ -859,7 +854,7 @@ router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
         }
 
 
-        // 2. Tentar criar a adesão
+        //  Tentar criar a adesão
         const novaAdesao = await prisma.Adesao.create({
             data: {
                 usuarioId: user.id,

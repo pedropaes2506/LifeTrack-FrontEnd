@@ -1,25 +1,16 @@
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
-// Importando o middleware de autenticação e o de autorização
 import { autenticarToken, autorizarNivelAcesso } from '../middleware.js'; 
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-// Função utilitária para validar o ENUM TipoUnidade
 function isValidTipoUnidade(tipo) {
     const validTypes = ['ML', 'HORAS', 'MINUTOS', 'UNIDADE', 'PASSOS'];
     return validTypes.includes(tipo);
 }
-
-// Middleware para proteger todas as rotas de Admin com Nível de Acesso
 const adminRotinasMiddleware = [autenticarToken, autorizarNivelAcesso(['ADMIN', 'MODERATOR'])];
 
-// ------------------------------------------------------------------
-// ROTAS CRUD DE ROTINAS (PROTEGIDAS)
-// ------------------------------------------------------------------
-
-// 1. CREATE: Criar uma nova rotina
 router.post('/rotinas', adminRotinasMiddleware, async (req, res) => {
     const { nome, metaValorPadrao, tipoUnidade, ativa } = req.body;
 
@@ -34,9 +25,9 @@ router.post('/rotinas', adminRotinasMiddleware, async (req, res) => {
         const novaRotina = await prisma.rotina.create({
             data: {
                 nome: nome,
-                metaValorPadrao: metaValorPadrao || null, // Permite null
+                metaValorPadrao: metaValorPadrao || null,
                 tipoUnidade: tipoUnidade,
-                ativa: ativa !== undefined ? ativa : true, // Padrão é true
+                ativa: ativa !== undefined ? ativa : true,
             }
         });
         res.status(201).json(novaRotina);
@@ -49,8 +40,6 @@ router.post('/rotinas', adminRotinasMiddleware, async (req, res) => {
     }
 });
 
-
-// 2. READ: Listar todas as rotinas (incluindo inativas)
 router.get('/rotinas', adminRotinasMiddleware, async (req, res) => {
     try {
         const rotinas = await prisma.rotina.findMany();
@@ -62,7 +51,6 @@ router.get('/rotinas', adminRotinasMiddleware, async (req, res) => {
 });
 
 
-// 3. UPDATE: Atualizar uma rotina
 router.put('/rotinas/:id', adminRotinasMiddleware, async (req, res) => {
     const { id } = req.params;
     const { nome, metaValorPadrao, tipoUnidade, ativa } = req.body;
@@ -95,7 +83,6 @@ router.put('/rotinas/:id', adminRotinasMiddleware, async (req, res) => {
 });
 
 
-// 4. DELETE: Deletar uma rotina
 router.delete('/rotinas/:id', adminRotinasMiddleware, async (req, res) => {
     const { id } = req.params;
 
