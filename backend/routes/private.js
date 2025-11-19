@@ -474,7 +474,7 @@ router.get('/calendar/daily-detail', autenticarToken, async (req, res) => {
 });
 
 
-//  Buscar Perfil do Usuário Logado
+//  Buscando o perfil do usuario
 router.get('/perfil', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 
