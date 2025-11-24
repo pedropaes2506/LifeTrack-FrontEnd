@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-/* Estilos para: src/styles/AboutPage.css */
-
-.about-page-container {
-  width: 100%;
-  max-width: 800px; /* Limita a largura do texto para melhor legibilidade */
-=======
 .about-page-container {
   width: 100%;
   max-width: 800px; 
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   padding-left: 180px; 
 }
 
@@ -20,10 +12,6 @@
   padding-top: 2rem; 
 }
 
-<<<<<<< HEAD
-/* Títulos das seções (ex: "Nossa Missão") */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .about-subtitle {
   color: var(--color-primary-dark, #3a336f);
   font-size: 1.5rem;
@@ -32,10 +20,6 @@
   margin-bottom: 1rem;
 }
 
-<<<<<<< HEAD
-/* Parágrafos de texto */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .about-text {
   color: var(--color-text-dark, #333);
   font-size: 1rem;
@@ -43,20 +27,12 @@
   opacity: 0.9;
 }
 
-<<<<<<< HEAD
-/* Rodapé da página (onde fica o botão) */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .about-page-footer {
   margin-top: 3rem;
   padding-top: 2rem;
   border-top: 1px solid #e0e0e0;
 }
 
-<<<<<<< HEAD
-/* Botão de Suporte (baseado nos botões roxos) */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-support {
   background-color: var(--color-primary-dark, #3a336f);
   color: var(--color-text-light, #fff);
@@ -79,20 +55,12 @@
   background-color: #2b2554;
 }
 
-<<<<<<< HEAD
-/* Estilo para o texto principal do botão */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-support-main-text {
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.4; 
 }
 
-<<<<<<< HEAD
-/* Texto menor dentro do botão */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-support span {
   font-size: 0.85rem;
   font-weight: 400;

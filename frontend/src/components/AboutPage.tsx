@@ -37,10 +37,6 @@ const AboutPage: React.FC = () => {
 
             <footer className="about-page-footer">
               <Link to="/suporte" className="btn-support">
-<<<<<<< HEAD
-                {/* ⬅️ ESTRUTURA PARA AS DUAS LINHAS DO BOTÃO */}
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                 <span className="btn-support-main-text">Precisa de ajuda?</span>
                 <span>Fale com o suporte</span>
               </Link>

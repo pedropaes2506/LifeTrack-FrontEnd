@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Header from './Header'; 
-import { useAuth, API_BASE_URL } from '../context/AuthContext'; // Importando useAuth e API_BASE_URL
-=======
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header'; 
 import { useAuth, API_BASE_URL } from '../context/AuthContext';
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import '../styles/App.css'; 
 import '../styles/Login.css'; 
 

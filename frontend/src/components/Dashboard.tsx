@@ -1,21 +1,11 @@
-<<<<<<< HEAD
-/* eslint-disable @typescript-eslint/no-explicit-any */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom'; 
 import Header from './Header';
 import Sidebar from './Sidebar';
 import HabitCard from './HabitCard';
-<<<<<<< HEAD
-import AddHabitModal from './AddHabitModal'; // Importa o modal de adição
-import { useAuth, API_BASE_URL } from '../context/AuthContext';
-import { getIcon } from '../utils/icons'; // Importa a função de mapeamento de ícones
-=======
 import AddHabitModal from './AddHabitModal';
 import { useAuth, API_BASE_URL } from '../context/AuthContext';
 import { getIcon } from '../utils/icons';
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import '../styles/App.css';
 import '../styles/Dashboard.css'; 
 import { Plus, LogOut } from 'lucide-react'; 

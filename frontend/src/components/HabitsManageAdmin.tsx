@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-/* eslint-disable @typescript-eslint/no-unused-vars */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './Header'; 
 import Sidebar from './Sidebar';
@@ -24,11 +20,7 @@ const DeleteIcon = () => (
 type TipoUnidade = 'ML' | 'HORAS' | 'MINUTOS' | 'UNIDADE' | 'PASSOS';
 
 interface Rotina {
-<<<<<<< HEAD
-  id: number; // Chave primária
-=======
   id: number;
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   nome: string;
   metaValorPadrao: number | null;
   tipoUnidade: TipoUnidade;
@@ -219,10 +211,6 @@ const EditHabitModal: React.FC<{ habit: Rotina; onClose: () => void; onSave: () 
   );
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 const DeleteModal: React.FC<{ habit: Rotina; onClose: () => void; onConfirm: () => void; }> = ({ habit, onClose, onConfirm }) => {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);

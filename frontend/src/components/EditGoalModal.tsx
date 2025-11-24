@@ -31,20 +31,12 @@ const EditGoalModal: React.FC<EditGoalModalProps> = ({ isOpen, onClose, currentG
              return;
         }
 
-<<<<<<< HEAD
-        // Lógica de salvar é delegada à ActivityPage, que simula a chamada à API
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
         onSave(goal);
         
         setLoading(false);
         onClose();
     };
 
-<<<<<<< HEAD
-    // Incremento baseado na unidade (simulação de lógica do modal original)
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     const handleIncrement = () => {
         const step = unit.toLowerCase() === 'ml' ? 100 : 10;
         setGoal(prev => prev + step);

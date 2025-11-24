@@ -29,11 +29,7 @@ const Header: React.FC<HeaderProps> = ({ showActions = true }) => {
                 <div className="header-actions">
                     {isAdminOrMod && (
                         <NavLink 
-<<<<<<< HEAD
                             to="/admin/rotinas" 
-=======
-                            to="/admin/rotinas"
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                             className={({ isActive }) => isActive ? "header-action-item active" : "header-action-item"}
                         >
                             <Wrench size={24} /> 

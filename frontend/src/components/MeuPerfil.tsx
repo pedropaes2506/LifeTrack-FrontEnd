@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-/* eslint-disable @typescript-eslint/no-unused-vars */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
@@ -14,11 +10,7 @@ const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private');
 interface UserProfile {
     nomeCompleto: string;
     email: string;
-<<<<<<< HEAD
-    sexo: string; // 'M', 'F', 'O' ou ''
-=======
     sexo: string;
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     dataNascimento: string; // Formato YYYY-MM-DD
 }
 
@@ -53,10 +45,6 @@ const MeuPerfil: React.FC = () => {
                 setDadosUsuario({
                     nomeCompleto: data.nomeCompleto || '',
                     email: data.email || '',
-<<<<<<< HEAD
-                    // O backend retorna 'M', 'F', 'O' ou '' (string vazia)
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                     sexo: data.sexo || '', 
                     dataNascimento: data.dataNascimento || '' 
                 });
@@ -176,10 +164,6 @@ const MeuPerfil: React.FC = () => {
                                     />
                                 </div>
 
-<<<<<<< HEAD
-                                {/* SEXO */}
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                                 <div className="campo-perfil">
                                     <label htmlFor="sexo">Sexo</label>
                                     <select

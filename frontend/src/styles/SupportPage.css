@@ -3,11 +3,7 @@
   max-width: 900px; 
   padding-left: 180px; 
   padding-right: 2rem;
-<<<<<<< HEAD
-  padding-top: 2rem; /* Adicionar padding superior padrão para consistência */
-=======
   padding-top: 2rem; 
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 }
 
 .support-page-header h1 {
@@ -54,10 +50,6 @@
   font-weight: 500;
 }
 
-<<<<<<< HEAD
-/* Estilo para o ícone de seta (para apontar para cima ou baixo) */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .arrow-icon {
     color: var(--color-primary-dark, #3a336f);
     transform: rotate(0deg); 
@@ -69,42 +61,23 @@
 
 
 .faq-answer {
-<<<<<<< HEAD
-    /* Aumenta o padding e remove o padding da esquerda para centralizar a lista */
-    padding: 0.5rem 2rem 1.5rem 1rem; 
-    background-color: #fcfcfc; /* Fundo levemente diferente para destacar */
-    color: #555;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    border-left: 3px solid var(--color-secondary-button, #5d57a6); /* Barra lateral roxa */
-=======
     padding: 0.5rem 2rem 1.5rem 1rem; 
     background-color: #fcfcfc; 
     color: #555;
     font-size: 0.95rem;
     line-height: 1.5;
     border-left: 3px solid var(--color-secondary-button, #5d57a6); 
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     margin-bottom: 0.5rem;
 }
 
 .faq-answer ul {
-<<<<<<< HEAD
-    list-style: none; /* Remove bolinhas/números padrão */
-    padding-left: 0; /* Remove o padding padrão da lista */
-=======
     list-style: none; 
     padding-left: 0; 
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     margin-top: 10px;
 }
 
 .faq-answer li {
-<<<<<<< HEAD
-    margin-bottom: 12px; /* Aumenta o espaçamento entre os passos */
-=======
     margin-bottom: 12px; 
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     padding-left: 10px;
 }
 
@@ -150,10 +123,6 @@
   resize: vertical;
 }
 
-<<<<<<< HEAD
-/* Botão Enviar Mensagem (Roxo) */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-send-message {
   background-color: var(--color-primary-dark, #3a336f);
   color: var(--color-text-light, #fff);
