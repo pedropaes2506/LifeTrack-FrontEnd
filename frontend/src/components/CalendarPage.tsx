@@ -19,7 +19,7 @@ interface MonthlySummary {
 }
 
 interface DailyDetail {
-    dataSelecionada: string; // Ex: "17 de Novembro de 2025"
+    dataSelecionada: string;
     totalPorcentagem: number;
     habitos: { 
         nome: string; 
