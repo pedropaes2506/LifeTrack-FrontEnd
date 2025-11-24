@@ -135,7 +135,11 @@ const CadastroPage = () => {
                                 <label htmlFor="password">Senha</label>
                             </div>
 
+<<<<<<< HEAD
                             {/* Sexo */}
+=======
+                            {/* Sexo - CORRIGIDO para enviar M, F, O */}
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                             <div className="input-group">
                                 <select 
                                     id="sexo" 

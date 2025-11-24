@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 
 // Importa os componentes de layout
 import Header from './Header'; 
@@ -7,6 +8,12 @@ import Sidebar from './Sidebar';
 // Importa os estilos
 import '../styles/App.css'; 
 import '../styles/SupportPage.css'; // Novo arquivo de estilo
+=======
+import Header from './Header'; 
+import Sidebar from './Sidebar';
+import '../styles/App.css'; 
+import '../styles/SupportPage.css';
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 
 // Dados mockados das perguntas frequentes (FAQ)
 const faqData = [
@@ -98,7 +105,10 @@ const SupportPage: React.FC = () => {
                                         <ArrowIcon isOpen={openQuestion === item.id} />
                                     </div>
                                     
+<<<<<<< HEAD
                                     {/* Conteúdo da resposta (só aparece se estiver aberto) */}
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                                     {openQuestion === item.id && (
                                         <div className="faq-answer">
                                             {item.answer}

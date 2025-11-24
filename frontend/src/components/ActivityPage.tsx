@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unused-vars */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from './Header';
@@ -17,17 +20,26 @@ import {
     Save, 
 } from 'lucide-react';
 
+<<<<<<< HEAD
+=======
+// Novo tipo de dado para o Histórico de Metas
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 interface MetaHistoryItem {
     date: string;
     status: 'Completa' | 'Incompleta';
     isComplete: boolean;
 }
 
+<<<<<<< HEAD
+=======
+// Novo tipo de dado para a página de atividade
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 interface ActivityData {
     adesaoId: number;
     title: string;
     unit: string;
     goal: number;
+<<<<<<< HEAD
     current: number;
     addButtons: number[];
     registrosDia: { time: string; value: number }[];
@@ -35,6 +47,15 @@ interface ActivityData {
 }
 
 
+=======
+    current: number; // Progresso TOTAL do dia (Soma de todos os deltas)
+    addButtons: number[];
+    registrosDia: { time: string; value: number }[]; // Lista de deltas individuais
+    historicoMetas: MetaHistoryItem[]; 
+}
+
+// Derivar URL privada da base URL
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 const API_PRIVATE_URL = API_BASE_URL.replace('/public', '/private'); 
 
 const ActivityPage: React.FC = () => {
@@ -51,7 +72,11 @@ const ActivityPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+<<<<<<< HEAD
 
+=======
+    // FUNÇÃO PARA BUSCAR DETALHES DA ADESÃO NO BACKEND
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     const loadData = useCallback(async () => {
         if (!adesaoId || !token) {
             if (!adesaoId) setError("ID da rotina ausente.");
@@ -139,6 +164,10 @@ const ActivityPage: React.FC = () => {
         }
     };
 
+<<<<<<< HEAD
+=======
+    // Ações locais (adicionar/remover consumo)
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     const handleAddConsumption = (amount: number) => {
         if (!data) return;
         setUndoStack(prevStack => [...prevStack, displayCurrent]);
@@ -161,21 +190,36 @@ const ActivityPage: React.FC = () => {
         setUndoStack(newStack);
     };
     
+<<<<<<< HEAD
 
+=======
+    // LÓGICA DE API: Salva o DELTA (Diferença) como um novo registro
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     const handleSaveChanges = async () => {
         if (!data || !token || !adesaoId) return;
         
         setError(null);
         setSuccessMessage(null);
         
+<<<<<<< HEAD
         const deltaConsumido = displayCurrent - data.current; 
 
+=======
+        // 1. Calcular o DELTA (a diferença que o usuário quer registrar)
+        const deltaConsumido = displayCurrent - data.current; 
+
+        // 2. Verificar se houve alteração antes de salvar
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
         if (deltaConsumido === 0) {
             setSuccessMessage("Nenhuma alteração a ser salva.");
             return;
         }
 
         try {
+<<<<<<< HEAD
+=======
+            // Envia o deltaConsumido, que será o valorRegistro no backend
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
             const response = await fetch(`${API_PRIVATE_URL}/registros/registrar`, {
                 method: 'POST',
                 headers: {
@@ -184,13 +228,21 @@ const ActivityPage: React.FC = () => {
                 },
                 body: JSON.stringify({ 
                     adesaoId: parseInt(adesaoId),
+<<<<<<< HEAD
                     valorConsumido: deltaConsumido, 
+=======
+                    valorConsumido: deltaConsumido, // Envia o DELTA
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                 })
             });
 
             const result = await response.json();
             
             if (response.ok) {
+<<<<<<< HEAD
+=======
+                // Sucesso: Recarrega os dados para que 'data.current' seja sincronizado
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                 setSuccessMessage("Registro de consumo adicionado com sucesso!");
                 loadData(); 
             } else {
@@ -297,7 +349,11 @@ const ActivityPage: React.FC = () => {
                             <button 
                                 className="button-base button-secondary-bg save-progress-btn"
                                 onClick={handleSaveChanges}
+<<<<<<< HEAD
                                 disabled={!hasPendingChanges} 
+=======
+                                disabled={!hasPendingChanges} // Desabilita se não houver delta
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                             >
                                 <Save size={16} /> Salvar Alteração
                             </button>
@@ -309,7 +365,10 @@ const ActivityPage: React.FC = () => {
                     <div className="hydration-actions">
                         <h3>Adicionar consumo:</h3>
                         <div className="consumption-buttons">
+<<<<<<< HEAD
                             {/* BOTÕES DINÂMICOS */}
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                             {addButtons.map((value) => (
                                 <button 
                                     key={value} 
@@ -330,7 +389,10 @@ const ActivityPage: React.FC = () => {
 
                         <h3>Remover consumo:</h3>
                         <div className="consumption-buttons">
+<<<<<<< HEAD
                             {/* BOTÕES DINÂMICOS */}
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                             {addButtons.map((value) => (
                                 <button 
                                     key={value} 
@@ -370,7 +432,10 @@ const ActivityPage: React.FC = () => {
                                 ) : (
                                     historicoMetas.map((item) => (
                                         <div key={item.date} className="history-item">
+<<<<<<< HEAD
                                             {/* ⬅️ CORREÇÃO: Renderiza status e ícone baseado em isComplete */}
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
                                             {item.isComplete ? (
                                                 <CalendarCheck size={18} style={{ color: 'var(--color-secondary-button)' }}/>
                                             ) : (

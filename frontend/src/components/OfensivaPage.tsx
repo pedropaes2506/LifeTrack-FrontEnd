@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unused-vars */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './Header'; 
 import Sidebar from './Sidebar';
@@ -141,7 +144,11 @@ const OfensivaPage: React.FC = () => {
     };
     
     const getDayClassName = (day: CalendarDay) => {
+<<<<<<< HEAD
         const classNames = ['ofensiva-day'];
+=======
+        let classNames = ['ofensiva-day'];
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
         
         if (!day.isCurrentMonth) {
             classNames.push('ofensiva-day-other-month');

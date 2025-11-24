@@ -16,10 +16,15 @@ import AboutPage from './components/AboutPage';
 import SupportPage from './components/SupportPage';
 import HabitsManageAdmin from './components/HabitsManageAdmin';
 
+<<<<<<< HEAD
 // Componente Wrapper para proteger rotas privadas
 const PrivateRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
     const { isAuthenticated } = useAuth();
     // Se não estiver autenticado, redireciona para o login
+=======
+const PrivateRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
+    const { isAuthenticated } = useAuth();
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
     return isAuthenticated ? <>{element}</> : <Navigate to="/login" replace />;
 };
 

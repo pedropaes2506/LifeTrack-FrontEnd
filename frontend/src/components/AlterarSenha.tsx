@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unused-vars */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';

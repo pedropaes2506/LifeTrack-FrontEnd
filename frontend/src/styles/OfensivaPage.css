@@ -93,10 +93,15 @@
   font-size: 1.5rem;
 }
 
+<<<<<<< HEAD
 /* Botões de navegação (< e >) */
 .ofensiva-nav-button {
   background: #4a3c6f;
   /* Roxo */
+=======
+.ofensiva-nav-button {
+  background: #4a3c6f;
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   border: none;
   border-radius: 8px;
   width: 40px;
@@ -142,12 +147,16 @@
   background: #f0f0f0;
 }
 
+<<<<<<< HEAD
 /* Estilos de destaque dos dias */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .ofensiva-day-other-month {
   color: #bbb;
   background: #fff;
 }
 
+<<<<<<< HEAD
 /* Destaque AZUL para dias de ofensiva */
 .ofensiva-day-highlight-blue {
   background-color: #e0f2f7;
@@ -157,11 +166,21 @@
 }
 
 /* Dia "de hoje" (com destaque azul + borda) */
+=======
+.ofensiva-day-highlight-blue {
+  background-color: #e0f2f7;
+  color: #0288d1;
+}
+
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .ofensiva-day-today {
   background-color: #e0f2f7;
   color: #0288d1;
   border: 2px solid #0277bd;
+<<<<<<< HEAD
   /* Borda azul */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   padding: calc(0.8rem - 2px);
   border-radius: 6px;
 }

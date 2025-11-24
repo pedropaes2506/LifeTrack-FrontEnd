@@ -1,6 +1,10 @@
 .manage-habits-container {
   width: 100%;
+<<<<<<< HEAD
   padding-left: 140px;
+=======
+  padding-left: 140px; 
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   padding-right: 2rem; 
   padding-top: 2rem; 
   padding-bottom: 2rem;
@@ -13,16 +17,25 @@
   margin-bottom: 2rem;
 }
 
+<<<<<<< HEAD
 /* Container da Tabela */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .habits-list-container {
   width: 100%;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+<<<<<<< HEAD
   overflow: hidden; /* Para os cantos arredondados */
 }
 
 /* Estrutura de Grid para a tabela */
+=======
+  overflow: hidden; 
+}
+
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .habits-list-header,
 .habit-row {
   display: grid;
@@ -32,15 +45,23 @@
   align-items: center;
 }
 
+<<<<<<< HEAD
 /* Cabeçalho da Tabela (cinza) */
 .habits-list-header {
   background-color: var(--color-highlight-bg, #f5f5f5); /* Usa a variável global */
+=======
+.habits-list-header {
+  background-color: var(--color-highlight-bg, #f5f5f5); 
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   font-weight: 600;
   color: #555;
   border-bottom: 1px solid #ddd;
 }
 
+<<<<<<< HEAD
 /* Linhas da Tabela */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .habit-row {
   border-bottom: 1px solid #f0f0f0;
 }
@@ -53,6 +74,7 @@
   color: var(--color-text-dark, #333);
 }
 
+<<<<<<< HEAD
 /* Centraliza o "✓" */
 .habit-active-check {
   text-align: center;
@@ -61,6 +83,14 @@
 }
 
 /* Botões de Ação (Editar/Deletar) */
+=======
+.habit-active-check {
+  text-align: center;
+  font-weight: bold;
+  color: #2e7d32; 
+}
+
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .habit-actions {
   display: flex;
   gap: 0.75rem;
@@ -79,14 +109,20 @@
   background-color: #e0e0e0;
 }
 
+<<<<<<< HEAD
 /* Rodapé com botões de Salvar/Novo */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .habits-actions-footer {
   margin-top: 2rem;
   display: flex;
   gap: 1rem;
 }
 
+<<<<<<< HEAD
 /* Botão Salvar (Roxo) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-habits-save {
   background-color: var(--color-primary-dark, #3a336f);
   color: var(--color-text-light, #fff);
@@ -102,9 +138,14 @@
   background-color: #2b2554;
 }
 
+<<<<<<< HEAD
 /* Botão Novo Hábito (Cinza Escuro) */
 .btn-habits-new {
   background-color: #4A4A4A; /* Cinza escuro */
+=======
+.btn-habits-new {
+  background-color: #4A4A4A; 
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   color: var(--color-text-light, #fff);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -118,19 +159,28 @@
   background-color: #333;
 }
 
+<<<<<<< HEAD
 /* Animação de Fade-in para o fundo */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 @keyframes fadeInOverlay {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
+<<<<<<< HEAD
 /* Animação de Scale-up para o modal */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 @keyframes scaleUpModal {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
+<<<<<<< HEAD
 /* Overlay (fundo escuro) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .modal-overlay-admin {
   position: fixed;
   top: 0;
@@ -142,10 +192,16 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+<<<<<<< HEAD
   animation: fadeInOverlay 0.2s ease-out; /* Animação de entrada */
 }
 
 /* Conteúdo do Modal (roxo) */
+=======
+  animation: fadeInOverlay 0.2s ease-out; 
+}
+
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .modal-content-admin {
   background-color: var(--color-primary-dark, #3a336f);
   color: var(--color-text-light, #fff);
@@ -154,7 +210,11 @@
   width: 100%;
   max-width: 450px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+<<<<<<< HEAD
   animation: scaleUpModal 0.2s ease-out; /* Animação de entrada */
+=======
+  animation: scaleUpModal 0.2s ease-out; 
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   transform-origin: center;
 }
 
@@ -165,14 +225,20 @@
   text-align: center;
 }
 
+<<<<<<< HEAD
 /* Corpo do Modal (Formulário ou Texto) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .modal-body-admin {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+<<<<<<< HEAD
 /* Estilos do Formulário */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .form-group-admin {
   display: flex;
   flex-direction: column;
@@ -195,7 +261,10 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
+<<<<<<< HEAD
 /* Rodapé do Modal (Botões) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .modal-footer-admin {
   display: flex;
   justify-content: flex-end; 
@@ -203,7 +272,10 @@
   margin-top: 2rem;
 }
 
+<<<<<<< HEAD
 /* Botão Cancelar (Cinza) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-modal-cancel {
   background-color: #6c757d;
   color: #fff;
@@ -218,7 +290,10 @@
   background-color: #5a6268;
 }
 
+<<<<<<< HEAD
 /* Botão Salvar (Roxo mais claro) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-modal-save {
   background-color: var(--color-secondary-button, #5d57a6);
   color: #fff;
@@ -233,7 +308,10 @@
   background-color: #4a458b;
 }
 
+<<<<<<< HEAD
 /* Estilos do Modal de Exclusão */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .delete-modal {
   text-align: center;
 }
@@ -246,7 +324,10 @@
   color: #fff;
 }
 
+<<<<<<< HEAD
 /* Botão Excluir (Vermelho) */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .btn-modal-delete {
   background-color: #d9534f;
   color: #fff;
@@ -261,7 +342,10 @@
   background-color: #c9302c;
 }
 
+<<<<<<< HEAD
 /* Estilo para o grupo do Checkbox */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .checkbox-group-admin {
   display: flex;
   flex-direction: row; 
@@ -271,7 +355,10 @@
   user-select: none; 
 }
 
+<<<<<<< HEAD
 /* Label (Texto "Hábito Ativo") */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .checkbox-group-admin label {
   font-size: 1.1rem; 
   font-weight: 500;
@@ -279,7 +366,10 @@
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 /* Caixa do Checkbox */
+=======
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .checkbox-group-admin input[type="checkbox"] {
   width: 1.5em;  
   height: 1.5em; 
@@ -300,6 +390,7 @@
 .checkbox-group-admin input[type="checkbox"]::before {
   content: "";
   
+<<<<<<< HEAD
   /* 1. Define o tamanho da forma de "L" */
   width: 0.65em; 
   height: 1.15em;
@@ -309,16 +400,30 @@
   border-width: 0 0.2em 0.2em 0; /* Borda da direita e de baixo */
 
   /* 3. Esconde e rotaciona por padrão */
+=======
+  width: 0.65em; 
+  height: 1.15em;
+
+  border: solid #2e7d32; 
+  border-width: 0 0.2em 0.2em 0; 
+
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   transform: scale(0) rotate(45deg);
   opacity: 0;
   transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
 }
 
 .checkbox-group-admin input[type="checkbox"]:checked {
+<<<<<<< HEAD
   background-color: #fff; /* Fundo branco quando checado */
 }
 
 /* 4. Mostra o "check" quando o input estiver :checked */
+=======
+  background-color: #fff; 
+}
+
+>>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 .checkbox-group-admin input[type="checkbox"]:checked::before {
   transform: scale(1) rotate(45deg);
   opacity: 1;

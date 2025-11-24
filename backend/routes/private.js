@@ -2,11 +2,10 @@ import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import { autenticarToken } from '../middleware.js'; 
 import bcrypt from 'bcrypt'; 
-import { enviarEmail } from './mail.js'; //  IMPORTAÇÃO DA FUNÇÃO ENVIAR EMAIL
+import { enviarEmail } from './mail.js';
 
 const prisma = new PrismaClient();
 const router = express.Router();
-
 
 function getAddButtons(tipoUnidade) {
     const unit = tipoUnidade ? tipoUnidade.toLowerCase() : '';
@@ -204,7 +203,6 @@ async function getGlobalStreakSummary(prismaInstance, userId, targetDate) {
     };
 }
 
-// ROTA EXISTENTE: Utilitária para ActivityPage
 async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, rotinaUnidade, rotinaMeta) {
     
     const addButtons = getAddButtons(rotinaUnidade);
@@ -288,7 +286,6 @@ async function getAdesaoHistory(prismaInstance, adesaoId, userId, rotinaNome, ro
     };
 }
 
-// Enviar mensagem de Suporte
 router.post('/suporte/enviar-mensagem', autenticarToken, async (req, res) => {
     const userId = req.user.id;
     const { assunto, mensagem } = req.body;
@@ -307,9 +304,8 @@ router.post('/suporte/enviar-mensagem', autenticarToken, async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        const remetenteEmail = user.email; // Email do usuário autenticado
+        const remetenteEmail = user.email; 
         
-        // Assumimos que o destinatário do suporte é o mesmo usuário SMTP configurado no .env
         const destinatarioSuporte = process.env.SMTP_USER; 
         
         const corpoEmail = `
@@ -337,7 +333,6 @@ router.post('/suporte/enviar-mensagem', autenticarToken, async (req, res) => {
 });
 
 
-//  Resumo da Ofensiva Global
 router.get('/progress/streak-summary', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const today = new Date();
@@ -353,7 +348,6 @@ router.get('/progress/streak-summary', autenticarToken, async (req, res) => {
 });
 
 
-// Resumo Mensal para Cores do Calendário
 router.get('/calendar/monthly-summary', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const { ano, mes } = req.query; 
@@ -396,7 +390,6 @@ router.get('/calendar/monthly-summary', autenticarToken, async (req, res) => {
 });
 
 
-// Detalhes Diários para o Card Lateral
 router.get('/calendar/daily-detail', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const { data } = req.query; // data: YYYY-MM-DD
@@ -474,7 +467,6 @@ router.get('/calendar/daily-detail', autenticarToken, async (req, res) => {
 });
 
 
-//  Buscando o perfil do usuario
 router.get('/perfil', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 
@@ -490,12 +482,10 @@ router.get('/perfil', autenticarToken, async (req, res) => {
         
         if (!user) return res.status(404).json({ message: "Usuário não encontrado." });
         
-        // Formata a data para YYYY-MM-DD
         const dataFormatada = user.dataNascimento ? 
             new Date(user.dataNascimento).toISOString().split('T')[0] : 
             '';
 
-        // Retorna o sexo como M, F, O ou '' (string vazia) se for null
         res.json({ 
             id: user.id, 
             email: user.email, 
@@ -509,33 +499,26 @@ router.get('/perfil', autenticarToken, async (req, res) => {
     }
 });
 
-// Atualizar Perfil do Usuário Logado (PUT)
 router.put('/perfil', autenticarToken, async (req, res) => {
-    // req.user.id é injetado pelo middleware, garantindo que o usuário só altere o próprio perfil
     const userId = req.user.id; 
     const { nomeCompleto, sexo, dataNascimento } = req.body;
     
     try {
         const updatedData = {};
 
-        //  Lógica para Nome Completo: Atualiza se não for nulo/vazio
         if (nomeCompleto !== undefined && nomeCompleto !== null && nomeCompleto.trim() !== "") {
             updatedData.nome = nomeCompleto.trim();
         }
-        
-        //  Lógica para Sexo: Se o valor for a string vazia (''), salva NULL no BD
+
         if (sexo !== undefined) {
             updatedData.sexo = sexo.trim() === '' ? null : sexo;
         }
 
-        //  Lógica para Data de Nascimento:
-        // Se for string vazia, E o campo é NOT NULL, OMITIMOS a chave para PRESERVAR o valor anterior.
         if (dataNascimento !== undefined && dataNascimento.trim() !== "") {
             updatedData.dataNascimento = new Date(dataNascimento);
         } 
 
 
-        // Se o objeto estiver vazio, não faz nada
         if (Object.keys(updatedData).length === 0) {
              return res.status(400).json({ message: "Nenhum dado válido para atualização foi fornecido." });
         }
@@ -555,7 +538,6 @@ router.put('/perfil', autenticarToken, async (req, res) => {
     }
 });
 
-// Alterar Senha
 router.post('/senha/alterar', autenticarToken, async (req, res) => {
     const userId = req.user.id; 
     const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -569,7 +551,6 @@ router.post('/senha/alterar', autenticarToken, async (req, res) => {
     }
     
     try {
-        //  Buscar a senha atual do usuário (hash)
         const user = await prisma.User.findUnique({
             where: { id: userId },
             select: { senha: true } 
@@ -579,17 +560,14 @@ router.post('/senha/alterar', autenticarToken, async (req, res) => {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
 
-        //  Comparar a senha atual fornecida com o hash no banco
         const isCurrentPasswordCorrect = await bcrypt.compare(currentPassword, user.senha);
 
         if (!isCurrentPasswordCorrect) {
             return res.status(401).json({ message: "Senha atual incorreta." });
         }
 
-        //  Gerar o hash para a nova senha
         const newPasswordHash = await bcrypt.hash(newPassword, 10);
 
-        //  Atualizar a senha no banco de dados
         await prisma.User.update({
             where: { id: userId },
             data: { senha: newPasswordHash }
@@ -604,7 +582,6 @@ router.post('/senha/alterar', autenticarToken, async (req, res) => {
 });
 
 
-// Listar todas as rotinas mestres disponíveis
 router.get('/rotinas/disponiveis', autenticarToken, async (req, res) => {
     try {
         const rotinas = await prisma.Rotina.findMany({ 
@@ -623,7 +600,6 @@ router.get('/rotinas/disponiveis', autenticarToken, async (req, res) => {
     }
 });
 
-//  Obter as rotinas que o usuário já aderiu
 router.get('/rotinas/minhas', autenticarToken, async (req, res) => {
     try {
         const user = await prisma.User.findUnique({ 
@@ -679,7 +655,6 @@ router.get('/rotinas/minhas', autenticarToken, async (req, res) => {
     }
 });
 
-// ROTA PARA ActivityPage: Buscar detalhes de uma adesão específica
 router.get('/rotinas/adesao/:adesaoId', autenticarToken, async (req, res) => {
     const { adesaoId } = req.params;
     
@@ -712,7 +687,6 @@ router.get('/rotinas/adesao/:adesaoId', autenticarToken, async (req, res) => {
             return res.status(404).json({ message: "Rotina não encontrada ou acesso negado." });
         }
         
-        // Buscar dados de progresso e histórico reais/simulados
         const historyData = await getAdesaoHistory(
             prisma, 
             adesao.id, 
@@ -722,7 +696,6 @@ router.get('/rotinas/adesao/:adesaoId', autenticarToken, async (req, res) => {
             adesao.metaPessoalValor
         );
 
-        // Formata a resposta
         const rotinaDetalhe = {
             adesaoId: adesao.id,
             nome: adesao.rotina.nome,
@@ -743,7 +716,6 @@ router.get('/rotinas/adesao/:adesaoId', autenticarToken, async (req, res) => {
     }
 });
 
-// ROTA para atualizar a meta pessoal (EditGoalModal)
 router.put('/rotinas/meta/:adesaoId', autenticarToken, async (req, res) => {
     const { adesaoId } = req.params;
     const { meta } = req.body;
@@ -783,7 +755,6 @@ router.put('/rotinas/meta/:adesaoId', autenticarToken, async (req, res) => {
 });
 
 
-// ROTA para registrar o progresso diário (ActivityPage) - AGORA O FECHAMENTO DO DIA É AUTOMÁTICO
 router.post('/registros/registrar', autenticarToken, async (req, res) => {
     const { adesaoId, valorConsumido } = req.body; 
 
@@ -801,7 +772,6 @@ router.post('/registros/registrar', autenticarToken, async (req, res) => {
         
         const idAdesao = parseInt(adesaoId);
         
-        //  Verifica se a adesão pertence ao usuário (segurança)
         const adesao = await prisma.Adesao.findFirst({
             where: { id: idAdesao, usuarioId: user.id },
         });
@@ -810,8 +780,6 @@ router.post('/registros/registrar', autenticarToken, async (req, res) => {
             return res.status(404).json({ message: "Adesão não encontrada." });
         }
         
-        //  Sempre cria um NOVO registro com o valor do DELTA
-        // Importante: metaCumprida é null para um delta, indicando que não é um registro de fechamento de dia.
         const registro = await prisma.RegistroRotina.create({
             data: {
                 adesaoId: idAdesao,
@@ -830,7 +798,6 @@ router.post('/registros/registrar', autenticarToken, async (req, res) => {
 });
 
 
-//  Adesão a uma Rotina
 router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
     try {
         const { rotinaId, metaPessoalValor } = req.body;
@@ -838,8 +805,7 @@ router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
         if (!rotinaId || metaPessoalValor === undefined) {
             return res.status(400).json({ message: "ID da rotina e valor da meta são obrigatórios." });
         }
-        
-        //  Encontrar o ID do usuário logado
+        o
         const user = await prisma.User.findUnique({ 
             where: { email: req.user.email }, 
             select: { id: true } 
@@ -847,14 +813,12 @@ router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
 
         if (!user) return res.status(404).json({ message: "Usuário não encontrado." });
 
-        // Garante que o metaPessoalValor é um número
         const metaValue = parseFloat(metaPessoalValor);
         if (isNaN(metaValue) || metaValue <= 0) {
             return res.status(400).json({ message: "O valor da meta deve ser um número positivo." });
         }
 
 
-        //  Tentar criar a adesão
         const novaAdesao = await prisma.Adesao.create({
             data: {
                 usuarioId: user.id,
