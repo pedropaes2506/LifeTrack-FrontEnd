@@ -13,7 +13,6 @@ COPY package*.json ./
 # Instala todas as dependências
 RUN npm install
 
-# *** ESTE É O PASSO CHAVE PARA CORRIGIR O ERRO DO PRISMA ***
 # Gera o Prisma Client, que agora usará o binário correto para o ambiente Linux/Alpine
 RUN npx prisma generate
 
