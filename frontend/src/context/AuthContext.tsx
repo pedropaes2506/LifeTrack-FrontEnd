@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-/* eslint-disable react-refresh/only-export-components */
-=======
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,11 +21,7 @@ interface AuthContextType {
 // Valor padrão do contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-<<<<<<< HEAD
-// URL Base da API (ajuste conforme a sua configuração)
-=======
 // URL Base da API
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
 const API_BASE_URL = 'http://localhost:3000/api/public'; 
 
 interface AuthProviderProps {
@@ -61,10 +53,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch (error) {
         console.error("Erro ao restaurar sessão ou dados inválidos:", error);
         
-<<<<<<< HEAD
-=======
-        // Limpa o localStorage para forçar um novo login.
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
@@ -77,11 +65,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem('token', newToken);
     localStorage.setItem('user', JSON.stringify(newUser));
   };
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> 6b980ee574667ac1f09da736a7d69787453bf517
   const updateUserName = (newName: string) => {
       setUser(prevUser => {
           if (prevUser) {
