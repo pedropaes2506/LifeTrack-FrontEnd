@@ -805,7 +805,7 @@ router.post('/rotinas/aderir', autenticarToken, async (req, res) => {
         if (!rotinaId || metaPessoalValor === undefined) {
             return res.status(400).json({ message: "ID da rotina e valor da meta são obrigatórios." });
         }
-        o
+        
         const user = await prisma.User.findUnique({ 
             where: { email: req.user.email }, 
             select: { id: true } 

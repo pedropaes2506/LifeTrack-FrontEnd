@@ -1,56 +1,4 @@
 services:
-  # 1. SERVIÇO DE FRONTEND
-  frontend:
-    # O contexto de build é a pasta 'frontend'
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: lifetrack-frontend
-    ports:
-      # Exponha o frontend na porta 80 (padrão Nginx)
-      - "80:80" 
-    environment:
-      # Variável de ambiente usada pelo código do frontend para chamar o backend
-      # O host é o nome do serviço 'app' e a porta é a interna 3000
-      VITE_API_BASE_URL: "http://localhost:3000"
-    depends_on:
-      - app
-      
-  # 2. SERVIÇO DE BACKEND
-  app:
-    # Use o Dockerfile criado na pasta 'backend' para o build
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    # Removido 'image'
-    # Removido 'platform' (o Dockerfile deve tratar a imagem base)
-    container_name: lifetrack-app-1
-    working_dir: /backend
-    volumes:
-      # Monta o código-fonte para que as mudanças no host (VS Code) sejam refletidas (hot-reload)
-      - ./backend:/backend 
-      - /backend/node_modules
-      # Adicione volume para node_modules se você quiser garantir que as libs fiquem no host, mas pode causar problemas de permissão.
-      # É melhor confiar no RUN npm install do Dockerfile.
-    ports:
-      - "3000:3000"
-    depends_on:
-      # Espera o DB estar rodando
-      db:
-        condition: service_started # Pode ser trocado por service_healthy se você adicionar healthcheck ao DB
-    environment:
-      # Variáveis de ambiente
-      DB_HOST: db # Nome do serviço DB
-      DB_PORT: 3306
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_NAME: lifetrack
-      DATABASE_URL: "mysql://root:root@db:3306/lifetrack"
-    # O comando principal para iniciar o servidor Node agora está no Dockerfile, 
-    # usando o `CMD` ou `ENTRYPOINT` (ex: CMD ["npm", "start"])
-    # Removida a linha 'command' para evitar conflito.
-    
-  # 3. SERVIÇO DE BANCO DE DADOS
   db:
     image: mysql:8.0
     restart: always
@@ -59,9 +7,59 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: lifetrack
     ports:
-      - "3307:3306" 
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Container Principal (Usuário + Frontend + Gateway)
+  user-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lifetrack-user
+    restart: always
+    ports:
+      - "${PORT}:${PORT}" # Exposta para você (3000)
+    environment:
+      APP_MODE: "GATEWAY"
+      ADMIN_SERVICE_URL: "http://lifetrack-admin:3000" # Endereço interno do admin
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+    depends_on:
+      db:
+        condition: service_healthy
+      admin-app:
+        condition: service_started
+
+  # Container de Admin (Escondido, apenas API)
+  admin-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lifetrack-admin
+    restart: always
+    # Sem 'ports' -> Acessível apenas internamente pelo user-app
+    environment:
+      APP_MODE: "ADMIN_SERVICE"
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:

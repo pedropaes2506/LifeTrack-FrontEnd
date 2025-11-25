@@ -22,7 +22,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // URL Base da API
-const API_BASE_URL = 'http://localhost:3000/api/public'; 
+const API_BASE_URL = '/api/public';
 
 interface AuthProviderProps {
   children: ReactNode;
