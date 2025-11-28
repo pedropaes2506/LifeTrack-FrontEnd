@@ -1,10 +1,10 @@
-# LifeTrack-FrontEnd 🩺
+# LifeTrack-FrontEnd 
 
 Este repositório contém o código-fonte do "LifeTrack-FrontEnd", o frontend de um aplicativo de acompanhamento de métricas de vida e saúde.
 
 O projeto foi desenvolvido como parte do curso "Usabilidade, desenvolvimento web, mobile e jogos" (A3).
 
-## 🚀 Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 O projeto foi construído utilizando um setup moderno de desenvolvimento web, incluindo:
 
@@ -13,7 +13,7 @@ O projeto foi construído utilizando um setup moderno de desenvolvimento web, in
   * **[TypeScript](https://www.typescriptlang.org/)**: Um superconjunto de JavaScript que adiciona tipagem estática.
   * **CSS**: Para estilização dos componentes.
 
-## 🏁 Como Começar
+##  Como Começar
 
 Para executar este projeto localmente, você precisará ter o [Node.js](https://nodejs.org/en/) e o [npm](https://www.npmjs.com/) (ou [Yarn](https://yarnpkg.com/)) instalados.
 
